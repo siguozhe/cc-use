@@ -1,0 +1,4 @@
+Convertissez des documents Markdown en livres blancs PDF professionnels avec un design de style Apple.
+Prend en charge la syntaxe Markdown complète (blocs de code, tableaux, guillemets, listes, etc.).
+Génère automatiquement une page de garde, une table des matières, des en-têtes et des pieds de page.
+Cas d'utilisation : documents techniques, livres blancs, didacticiels, rapports ; tout Markdown nécessitant une mise en page professionnelle.
