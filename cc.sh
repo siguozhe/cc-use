@@ -1,6 +1,13 @@
 #!/bin/bash
 
-# 设置UTF-8编码
+# Claude Code 配置脚本（包装器）
+# 核心逻辑在 cc-config.py 中
+
+# 设置脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CC_CONFIG="$SCRIPT_DIR/cc-config.py"
+
+# 设置 UTF-8 编码
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
@@ -8,196 +15,157 @@ export LANG=en_US.UTF-8
 clear
 
 echo "========================================"
-echo "Claude Code Configuration Script for Linux/macOS"
+echo "Claude Code Configuration Script"
 echo "========================================"
 
-# --- 基础配置文件检查与创建 ---
-CLAUDE_JSON="$HOME/.claude.json"
-
-if [ ! -f "$CLAUDE_JSON" ]; then
-    echo '{"hasCompletedOnboarding": true}' > "$CLAUDE_JSON"
-    echo "Created base configuration file: $CLAUDE_JSON"
-else
-    echo "Base configuration file exists: $CLAUDE_JSON"
+# 检查 cc-config.py 是否存在
+if [ ! -f "$CC_CONFIG" ]; then
+    echo "❌ 错误: cc-config.py 未找到"
+    echo "   期望位置: $CC_CONFIG"
+    exit 1
 fi
 
-echo
-echo "Please select your API provider:"
-echo "  1. Zhipu AI (GLM)"
-echo "  2. MiniMax (International)"
-echo "  3. MiniMax (China)"
-echo "  4. Kimi (Moonshot AI)"
-echo "  5. Anthropic Official"
-echo "  6. Fangzhou (Ark)"
-echo "  7. Siliconflow"
-echo "  8. DashScope (Qwen)"
-echo "  9. Qianfan (Baidu)"
-echo
-
-# 读取用户选择
-read -p "Enter your choice [1-9]: " CHOICE
-
-# --- 根据选择设置变量 ---
-case $CHOICE in
-    1)
-        PROVIDER="ZhipuAI"
-        BASE_URL="https://open.bigmodel.cn/api/anthropic"
-        MODEL="glm-4.7"
-        ;;
-    2)
-        PROVIDER="MiniMax_Intl"
-        BASE_URL="https://api.minimax.io/anthropic"
-        MODEL="MiniMax-M2.1"
-        ;;
-    3)
-        PROVIDER="MiniMax_CN"
-        BASE_URL="https://api.minimaxi.com/anthropic"
-        MODEL="MiniMax-M2.1"
-        ;;
-    4)
-        PROVIDER="Kimi"
-        BASE_URL="https://api.moonshot.cn/anthropic/"
-        MODEL="kimi-k2-turbo-preview"
-        ;;
-    5)
-        PROVIDER="Anthropic"
-        BASE_URL="https://api.anthropic.com"
-        MODEL="claude-3-5-sonnet-20241022"
-        ;;
-    6)
-        PROVIDER="Fangzhou"
-        BASE_URL="https://ark.cn-beijing.volces.com/api/coding"
-        MODEL="ark-code-latest"
-        ;;
-    7)
-        PROVIDER="Siliconflow"
-        BASE_URL="https://api.siliconflow.cn/"
-        MODEL="Pro/MiniMaxAI/MiniMax-M2.5"
-        ;;
-    8)
-        PROVIDER="DashScope"
-        BASE_URL="https://coding.dashscope.aliyuncs.com/apps/anthropic"
-        MODEL="qwen3.5-plus"
-        ;;
-    9)
-        PROVIDER="Qianfan"
-        BASE_URL="https://qianfan.baidubce.com/anthropic/coding"
-        MODEL="qianfan-code-latest"
-        ;;
-    *)
-        echo "Invalid selection."
-        read -p "Press Enter to exit..."
-        exit 1
-        ;;
-esac
-
-echo
-echo "========================================"
-echo "Configuration Summary"
-echo "========================================"
-echo "Provider: $PROVIDER"
-echo "Base URL: $BASE_URL"
-echo "Model: $MODEL"
-echo "========================================"
-
-# API Key 输入
-echo
-echo "Please enter your API Key:"
-# 尝试从现有配置中读取默认 API Key
-DEFAULT_KEY=""
-if [ -f "$CLAUDE_JSON" ]; then
-    DEFAULT_KEY=$(grep -o '"anthropic_api_key"[[:space:]]*:[[:space:]]*"[^"]*"' "$CLAUDE_JSON" | cut -d'"' -f4 2>/dev/null || echo "")
-fi
-
-if [ -n "$DEFAULT_KEY" ]; then
-    read -p "API Key [default: $DEFAULT_KEY]: " INPUT_KEY
-    # 如果用户直接按回车，使用默认值
-    API_KEY="${INPUT_KEY:-$DEFAULT_KEY}"
-else
-    read -p "API Key: " API_KEY
-fi
-
-# 如果还是为空，使用硬编码的备用值
-if [ -z "$API_KEY" ]; then
-    echo "Warning: No API Key provided. Using fallback key."
-    API_KEY="bcff1f1c1afb408e9fd3f2791d20793b.kqjL0iiOg1zRTf57"
-fi
-
-echo
-echo "Using API Key: ${API_KEY:0:10}...${API_KEY: -4}"
-
-# Primary API Key 输入（用于 ~/.claude/config.json）
-echo
-echo "Please enter your Primary API Key (for config.json):"
-CONFIG_JSON_PATH="$HOME/.claude/config.json"
-DEFAULT_PRIMARY_KEY=""
-if [ -f "$CONFIG_JSON_PATH" ]; then
-    DEFAULT_PRIMARY_KEY=$(grep -o '"primaryApiKey"[[:space:]]*:[[:space:]]*"[^"]*"' "$CONFIG_JSON_PATH" | cut -d'"' -f4 2>/dev/null || echo "")
-fi
-
-if [ -n "$DEFAULT_PRIMARY_KEY" ]; then
-    read -p "Primary API Key [default: $DEFAULT_PRIMARY_KEY]: " INPUT_PRIMARY_KEY
-    PRIMARY_API_KEY="${INPUT_PRIMARY_KEY:-$DEFAULT_PRIMARY_KEY}"
-else
-    read -p "Primary API Key: " PRIMARY_API_KEY
-fi
-
-# 如果为空，使用 API_KEY 作为备用
-if [ -z "$PRIMARY_API_KEY" ]; then
-    echo "Warning: No Primary API Key provided. Using API Key as fallback."
-    PRIMARY_API_KEY="$API_KEY"
-fi
-
-echo
-echo "Using Primary API Key: ${PRIMARY_API_KEY:0:10}...${PRIMARY_API_KEY: -4}"
-echo
-
-echo "WARNING: This will update the API configuration!"
-read -p "Continue? (Y/N): " CONFIRM
-
-# 转换为大写并判断
-if [ "$(echo $CONFIRM | tr '[:lower:]' '[:upper:]')" != "Y" ]; then
-    echo "Configuration cancelled."
-    read -p "Press Enter to exit..."
-    exit 0
-fi
-
-# --- 使用 Python 合并更新配置文件 ---
-echo "Updating configuration files..."
-
-# 1. 更新 .claude.json（只更新 API 配置，保留其他所有配置）
+# 查找 Python
+PYTHON_CMD=""
 if command -v python3 &> /dev/null; then
-    python3 << PYTHON_SCRIPT
-import json
+    PYTHON_CMD="python3"
+elif command -v python &> /dev/null; then
+    PYTHON_CMD="python"
+fi
 
-claude_json_path = "$CLAUDE_JSON"
-new_config = {
-    "anthropic_api_key": "$API_KEY",
-    "anthropic_base_url": "$BASE_URL",
-    "model": "$MODEL",
-    "provider": "$PROVIDER",
-    "hasCompletedOnboarding": True
-}
+if [ -z "$PYTHON_CMD" ]; then
+    echo ""
+    echo "⚠️  警告: Python 未找到，进入降级模式"
+    echo ""
+    echo "降级模式功能限制:"
+    echo "  - 无 API Key 缓存"
+    echo "  - 无多模型选择"
+    echo "  - 无上次使用记忆"
+    echo ""
+    echo "建议安装 Python 以获得完整功能:"
+    echo "  Ubuntu/Debian: sudo apt install python3"
+    echo "  macOS: brew install python3"
+    echo ""
+    read -p "是否继续使用降级模式？(y/N): " CONFIRM_FALLBACK
+    if [ "$(echo "$CONFIRM_FALLBACK" | tr '[:lower:]' '[:upper:]')" != "Y" ]; then
+        echo "配置取消"
+        exit 0
+    fi
+    echo ""
+    # 降级模式：简单配置（直接覆盖）
+    echo "启动降级配置模式..."
+    echo ""
+    echo "请选择 API 提供商（降级模式）:"
+    echo "  1. Zhipu AI (GLM)"
+    echo "  2. MiniMax (International)"
+    echo "  3. MiniMax (China)"
+    echo "  4. Kimi (Moonshot AI)"
+    echo "  5. Anthropic Official"
+    echo "  6. Fangzhou (Ark)"
+    echo "  7. Siliconflow"
+    echo "  8. DashScope (Qwen)"
+    echo "  9. Qianfan (Baidu)"
+    echo " 10. PPChat (Claude Code Proxy)"
+    echo ""
+    read -p "Enter your choice [1-10]: " CHOICE
 
-# 读取现有配置
-try:
-    with open(claude_json_path, 'r') as f:
-        existing_config = json.load(f)
-except:
-    existing_config = {}
+    # 根据选择设置变量
+    case $CHOICE in
+        1)
+            PROVIDER="ZhipuAI"
+            BASE_URL="https://open.bigmodel.cn/api/anthropic"
+            MODEL="glm-4.7"
+            ;;
+        2)
+            PROVIDER="MiniMax_Intl"
+            BASE_URL="https://api.minimax.io/anthropic"
+            MODEL="MiniMax-M2.1"
+            ;;
+        3)
+            PROVIDER="MiniMax_CN"
+            BASE_URL="https://api.minimaxi.com/anthropic"
+            MODEL="MiniMax-M2.1"
+            ;;
+        4)
+            PROVIDER="Kimi"
+            BASE_URL="https://api.moonshot.cn/anthropic/"
+            MODEL="kimi-k2-turbo-preview"
+            ;;
+        5)
+            PROVIDER="Anthropic"
+            BASE_URL="https://api.anthropic.com"
+            MODEL="claude-3-5-sonnet-20241022"
+            ;;
+        6)
+            PROVIDER="Fangzhou"
+            BASE_URL="https://ark.cn-beijing.volces.com/api/coding"
+            MODEL="ark-code-latest"
+            ;;
+        7)
+            PROVIDER="Siliconflow"
+            BASE_URL="https://api.siliconflow.cn/"
+            MODEL="Pro/MiniMaxAI/MiniMax-M2.5"
+            ;;
+        8)
+            PROVIDER="DashScope"
+            BASE_URL="https://coding.dashscope.aliyuncs.com/apps/anthropic"
+            MODEL="qwen3.5-plus"
+            ;;
+        9)
+            PROVIDER="Qianfan"
+            BASE_URL="https://qianfan.baidubce.com/anthropic/coding"
+            MODEL="qianfan-code-latest"
+            ;;
+        10)
+            PROVIDER="PPChat"
+            BASE_URL="https://code.ppchat.vip"
+            MODEL="claude-sonnet-4-6"
+            ;;
+        *)
+            echo "Invalid selection."
+            exit 1
+            ;;
+    esac
 
-# 更新 API 配置字段
-for key, value in new_config.items():
-    existing_config[key] = value
+    echo ""
+    echo "========================================"
+    echo "Configuration Summary"
+    echo "========================================"
+    echo "Provider: $PROVIDER"
+    echo "Base URL: $BASE_URL"
+    echo "Model: $MODEL"
+    echo "========================================"
 
-# 写回文件
-with open(claude_json_path, 'w') as f:
-    json.dump(existing_config, f, indent=2, ensure_ascii=False)
-PYTHON_SCRIPT
-    echo "Configuration file updated (preserved existing config): $CLAUDE_JSON"
-else
-    echo "Warning: python3 not found. Using fallback update."
-    # Fallback: 完全覆盖（会丢失其他配置）
+    # API Key 输入
+    echo ""
+    read -p "请输入 API Key: " API_KEY
+    if [ -z "$API_KEY" ]; then
+        echo "❌ API Key 不能为空"
+        exit 1
+    fi
+
+    # Primary API Key 输入
+    echo ""
+    read -p "请输入 Primary API Key（用于 config.json）: " PRIMARY_API_KEY
+    if [ -z "$PRIMARY_API_KEY" ]; then
+        PRIMARY_API_KEY="$API_KEY"
+    fi
+
+    echo ""
+    echo "确认继续？(Y/N): "
+    read -p "" CONFIRM
+    if [ "$(echo "$CONFIRM" | tr '[:lower:]' '[:upper:]')" != "Y" ]; then
+        echo "配置取消"
+        exit 0
+    fi
+
+    # 直接覆盖配置文件
+    CLAUDE_JSON="$HOME/.claude.json"
+    SETTINGS_JSON="$HOME/.claude/settings.json"
+    CONFIG_JSON="$HOME/.claude/config.json"
+    mkdir -p "$(dirname "$SETTINGS_JSON")" 2>/dev/null
+
+    # 更新 .claude.json
     cat > "$CLAUDE_JSON" << EOF
 {
   "anthropic_api_key": "$API_KEY",
@@ -208,119 +176,112 @@ else
 }
 EOF
     echo "Configuration file updated: $CLAUDE_JSON"
-fi
 
-# 2. 更新用户目录的 settings.json（只更新模型 API 部分，保留其他配置）
-SETTINGS_JSON="$HOME/.claude/settings.json"
-mkdir -p "$(dirname "$SETTINGS_JSON")"
-
-# 检查文件是否存在，如果不存在则创建基础结构
-if [ ! -f "$SETTINGS_JSON" ]; then
-    echo "{}" > "$SETTINGS_JSON"
-fi
-
-# 使用 Python 来合并 JSON，保留原有配置
-if command -v python3 &> /dev/null; then
-    python3 << PYTHON_SCRIPT
-import json
-
-settings_path = "$SETTINGS_JSON"
-new_env = {
+    # 更新 settings.json（降级模式：直接覆盖，不处理 Siliconflow 特殊参数）
+    cat > "$SETTINGS_JSON" << EOF
+{
+  "env": {
     "ANTHROPIC_AUTH_TOKEN": "$API_KEY",
     "ANTHROPIC_BASE_URL": "$BASE_URL",
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "$MODEL",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "$MODEL",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "$MODEL"
+  }
 }
+EOF
+    echo "Settings file updated: $SETTINGS_JSON (降级模式：需手动配置 Siliconflow thinking 参数)"
 
-# 读取现有配置
-try:
-    with open(settings_path, 'r') as f:
-        settings = json.load(f)
-except:
-    settings = {}
-
-# 更新 env 部分
-if "env" not in settings:
-    settings["env"] = {}
-
-# 选项 7 (Siliconflow) 添加 thinking 参数，其他选项删除该参数
-choice = "$CHOICE"
-if choice == "7":
-    new_env["CLAUDE_CODE_ADDITIONAL_REQUEST_BODY"] = '{"thinking":{"type":"enabled"}}'
-else:
-    # 其他选项移除该参数（如果存在）
-    if "CLAUDE_CODE_ADDITIONAL_REQUEST_BODY" in settings["env"]:
-        del settings["env"]["CLAUDE_CODE_ADDITIONAL_REQUEST_BODY"]
-
-settings["env"].update(new_env)
-
-# 写回文件
-with open(settings_path, 'w') as f:
-    json.dump(settings, f, indent=2, ensure_ascii=False)
-PYTHON_SCRIPT
-    echo "Settings file updated (preserved existing config): $SETTINGS_JSON"
-else
-    echo "Warning: python3 not found. Skipping settings.json update."
-    echo "Please manually update: $SETTINGS_JSON"
-fi
-
-# 3. 更新 ~/.claude/config.json（primaryApiKey 配置）
-CONFIG_JSON="$HOME/.claude/config.json"
-
-if command -v python3 &> /dev/null; then
-    python3 << PYTHON_SCRIPT
-import json
-import os
-
-config_path = "$CONFIG_JSON"
-primary_api_key = "$PRIMARY_API_KEY"
-
-# 确保 .claude 目录存在
-os.makedirs(os.path.dirname(config_path), exist_ok=True)
-
-# 读取现有配置（如果存在）
-if os.path.exists(config_path):
-    try:
-        with open(config_path, 'r') as f:
-            config = json.load(f)
-        print(f"Config file exists: {config_path}")
-    except:
-        config = {}
-else:
-    config = {}
-    print(f"Creating new config file: {config_path}")
-
-# 更新 primaryApiKey
-config["primaryApiKey"] = primary_api_key
-
-# 写回文件
-with open(config_path, 'w') as f:
-    json.dump(config, f, indent=2, ensure_ascii=False)
-
-print(f"primaryApiKey updated in: {config_path}")
-PYTHON_SCRIPT
-else
-    # Fallback: 直接创建/覆盖
-    mkdir -p "$(dirname "$CONFIG_JSON")"
+    # 更新 config.json
     cat > "$CONFIG_JSON" << EOF
 {
   "primaryApiKey": "$PRIMARY_API_KEY"
 }
 EOF
-    echo "Config file created: $CONFIG_JSON"
+    echo "Config file updated: $CONFIG_JSON"
+
+    # 设置环境变量
+    export ANTHROPIC_API_KEY="$API_KEY"
+    export ANTHROPIC_BASE_URL="$BASE_URL"
+
+    echo ""
+    echo "========================================"
+    echo "启动 Claude Code..."
+    echo "========================================"
+    echo ""
+
+    exec claude
 fi
 
-echo
-echo "Starting Claude Code with $PROVIDER settings..."
-echo "================================================"
-echo
+# 检查 Python 是否能运行
+"$PYTHON_CMD" --version >/dev/null 2>&1
+if [ $? -ne 0 ]; then
+    echo "❌ 错误: Python 运行失败"
+    exit 1
+fi
 
-# 设置环境变量并启动claude
-export ANTHROPIC_API_KEY="$API_KEY"
-export ANTHROPIC_BASE_URL="$BASE_URL"
-claude
+# 运行 cc-config.py
+# 注意: 用户提示在 stderr，环境变量在 stdout
+# 我们使用临时文件捕获 stdout
+TEMP_ENV=$(mktemp /tmp/claude-env.XXXXXX)
 
-# 等待用户输入后退出
-read -p "Press Enter to exit..."
+"$PYTHON_CMD" "$CC_CONFIG" 2>&1 | tee /dev/stderr | awk '/##CC_ENV_START##/,/##CC_ENV_END##/' > "$TEMP_ENV"
 
+# 检查是否成功获取环境变量
+if ! grep -q "##CC_ENV_START##" "$TEMP_ENV"; then
+    echo ""
+    echo "配置未完成"
+    rm -f "$TEMP_ENV"
+    exit 1
+fi
+
+# 解析环境变量
+export ANTHROPIC_API_KEY=""
+export ANTHROPIC_BASE_URL=""
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=""
+export ANTHROPIC_DEFAULT_SONNET_MODEL=""
+export ANTHROPIC_DEFAULT_OPUS_MODEL=""
+export CLAUDE_CODE_ADDITIONAL_REQUEST_BODY=""
+
+while IFS= read -r line; do
+    case "$line" in
+        "##CC_ENV_START##"|"##CC_ENV_END##")
+            continue
+            ;;
+        ANTHROPIC_API_KEY=*)
+            export ANTHROPIC_API_KEY="${line#ANTHROPIC_API_KEY=}"
+            ;;
+        ANTHROPIC_BASE_URL=*)
+            export ANTHROPIC_BASE_URL="${line#ANTHROPIC_BASE_URL=}"
+            ;;
+        ANTHROPIC_DEFAULT_HAIKU_MODEL=*)
+            export ANTHROPIC_DEFAULT_HAIKU_MODEL="${line#ANTHROPIC_DEFAULT_HAIKU_MODEL=}"
+            ;;
+        ANTHROPIC_DEFAULT_SONNET_MODEL=*)
+            export ANTHROPIC_DEFAULT_SONNET_MODEL="${line#ANTHROPIC_DEFAULT_SONNET_MODEL=}"
+            ;;
+        ANTHROPIC_DEFAULT_OPUS_MODEL=*)
+            export ANTHROPIC_DEFAULT_OPUS_MODEL="${line#ANTHROPIC_DEFAULT_OPUS_MODEL=}"
+            ;;
+        CLAUDE_CODE_ADDITIONAL_REQUEST_BODY=*)
+            export CLAUDE_CODE_ADDITIONAL_REQUEST_BODY="${line#CLAUDE_CODE_ADDITIONAL_REQUEST_BODY=}"
+            ;;
+    esac
+done < "$TEMP_ENV"
+
+rm -f "$TEMP_ENV"
+
+# 检查是否有配置
+if [ -z "$ANTHROPIC_API_KEY" ] || [ -z "$ANTHROPIC_BASE_URL" ]; then
+    echo ""
+    echo "❌ 错误: 未获取到有效配置"
+    exit 1
+fi
+
+echo ""
+echo "========================================"
+echo "启动 Claude Code..."
+echo "========================================"
+echo ""
+
+# 启动 Claude Code
+exec claude
