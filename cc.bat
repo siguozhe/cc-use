@@ -45,10 +45,9 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: 运行 cc-config.py
-:: 注意: 用户提示在 stderr，环境变量在 stdout
+:: stderr 给用户看交互提示，stdout 的环境变量块重定向到文件
 set "TEMP_ENV=%TEMP%\claude-env.txt"
-%PYTHON_CMD% "%CC_CONFIG%" 2>&1 | findstr /v "##CC_ENV_START##" | findstr /v "##CC_ENV_END##"
-%PYTHON_CMD% "%CC_CONFIG%" 2>nul | findstr /r "##CC_ENV_START##\|##CC_ENV_END##\|=" > "%TEMP_ENV%"
+%PYTHON_CMD% "%CC_CONFIG%" > "%TEMP_ENV%"
 
 :: 检查是否成功获取环境变量
 findstr "##CC_ENV_START##" "%TEMP_ENV%" >nul 2>&1
@@ -68,7 +67,10 @@ set "ANTHROPIC_DEFAULT_SONNET_MODEL="
 set "ANTHROPIC_DEFAULT_OPUS_MODEL="
 set "CLAUDE_CODE_ADDITIONAL_REQUEST_BODY="
 
-for /f "tokens=1,* delims==" %%a in ('findstr "ANTHROPIC\|CLAUDE" "%TEMP_ENV%"') do (
+for /f "tokens=1,* delims==" %%a in ('findstr "ANTHROPIC" "%TEMP_ENV%"') do (
+    set "%%a=%%b"
+)
+for /f "tokens=1,* delims==" %%a in ('findstr "CLAUDE" "%TEMP_ENV%"') do (
     set "%%a=%%b"
 )
 
