@@ -279,10 +279,10 @@ if [ -f "$CC_CONFIG" ] && [ -n "$PYTHON_CMD" ]; then
     print_green "Using cc-config.py for configuration..."
     echo
 
-    # 运行 cc-config.py
+    # 运行 cc-config.py 一次：stderr 显示给用户（交互提示），stdout 捕获环境变量
     TEMP_ENV=$(mktemp /tmp/claude-env.XXXXXX)
 
-    "$PYTHON_CMD" "$CC_CONFIG" 2>&1 | tee /dev/stderr | awk '/##CC_ENV_START##/,/##CC_ENV_END##/' > "$TEMP_ENV"
+    "$PYTHON_CMD" "$CC_CONFIG" > "$TEMP_ENV"
 
     # 检查是否成功获取环境变量
     if grep -q "##CC_ENV_START##" "$TEMP_ENV"; then

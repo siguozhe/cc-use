@@ -300,10 +300,9 @@ if %ERRORLEVEL% neq 0 (
 call :print_green "Using cc-config.py for configuration..."
 echo.
 
-:: 运行 cc-config.py
+:: 运行 cc-config.py 一次：stderr 显示给用户（交互提示），stdout 捕获环境变量
 set "TEMP_ENV=%TEMP%\claude-env.txt"
-%PYTHON_CMD% "%CC_CONFIG%" 2>&1 | findstr /v "##CC_ENV_START##" | findstr /v "##CC_ENV_END##"
-%PYTHON_CMD% "%CC_CONFIG%" 2>nul | findstr /r "##CC_ENV_START##\|##CC_ENV_END##\|=" > "%TEMP_ENV%"
+%PYTHON_CMD% "%CC_CONFIG%" > "%TEMP_ENV%"
 
 :: 检查是否成功获取环境变量
 findstr "##CC_ENV_START##" "%TEMP_ENV%" >nul 2>&1
