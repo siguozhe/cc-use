@@ -66,8 +66,9 @@ if [ -z "$PYTHON_CMD" ]; then
     echo "  8. DashScope (Qwen)"
     echo "  9. Qianfan (Baidu)"
     echo " 10. PPChat (Claude Code Proxy)"
+    echo " 11. DashScope Pay (Qwen)"
     echo ""
-    read -p "Enter your choice [1-10]: " CHOICE
+    read -p "Enter your choice [1-11]: " CHOICE
 
     # 根据选择设置变量
     case $CHOICE in
@@ -120,6 +121,11 @@ if [ -z "$PYTHON_CMD" ]; then
             PROVIDER="PPChat"
             BASE_URL="https://code.ppchat.vip"
             MODEL="claude-sonnet-4-6"
+            ;;
+        11)
+            PROVIDER="DashScope_Pay"
+            BASE_URL="https://dashscope.aliyuncs.com/apps/anthropic"
+            MODEL="qwen3.5-plus"
             ;;
         *)
             echo "Invalid selection."

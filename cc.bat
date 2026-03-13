@@ -131,8 +131,9 @@ echo   7. Siliconflow
 echo   8. DashScope (Qwen)
 echo   9. Qianfan (Baidu)
 echo   10. PPChat (Claude Code Proxy)
+echo   11. DashScope Pay (Qwen)
 echo.
-set /p "CHOICE=Enter your choice [1-10]: "
+set /p "CHOICE=Enter your choice [1-11]: "
 
 :: 根据选择设置变量
 if "%CHOICE%"=="1" (
@@ -175,6 +176,10 @@ if "%CHOICE%"=="1" (
     set "PROVIDER=PPChat"
     set "BASE_URL=https://code.ppchat.vip"
     set "MODEL=claude-sonnet-4-6"
+) else if "%CHOICE%"=="11" (
+    set "PROVIDER=DashScope_Pay"
+    set "BASE_URL=https://dashscope.aliyuncs.com/apps/anthropic"
+    set "MODEL=qwen3.5-plus"
 ) else (
     echo Invalid choice
     pause

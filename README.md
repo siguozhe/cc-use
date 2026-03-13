@@ -1,6 +1,6 @@
 # Claude Code 一键安装与配置脚本
 
-一套 Claude Code 的一键安装和 API 配置脚本，支持 Linux/macOS 和 Windows，内置 10 个 API 提供商。
+一套 Claude Code 的一键安装和 API 配置脚本，支持 Linux/macOS 和 Windows，内置 11 个 API 提供商。
 
 ## 功能特性
 
@@ -123,16 +123,17 @@ cc.bat
 
 | 序号 | 提供商 | 默认模型 | 可选模型 | Base URL |
 | ------ | -------- | ---------- | ---------- | ---------- |
-| 1 | Zhipu AI (智谱) | glm-4.7 | glm-4-flash, glm-4-air, glm-3-turbo | `https://open.bigmodel.cn/api/anthropic` |
+| 1 | Zhipu AI (智谱) | glm-4.7 | glm-4.6, glm-4.5, glm-4.5-Air | `https://open.bigmodel.cn/api/anthropic` |
 | 2 | MiniMax (国际) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimax.io/anthropic` |
 | 3 | MiniMax (中国) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimaxi.com/anthropic` |
 | 4 | Kimi (月之暗面) | kimi-k2-turbo-preview | kimi-pro, kimi-max | `https://api.moonshot.cn/anthropic/` |
 | 5 | Anthropic 官方 | claude-3-5-sonnet-20241022 | claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307 | `https://api.anthropic.com` |
-| 6 | 火山方舟 (Ark) | ark-code-latest | ark-code-turbo, ark-code-pro | `https://ark.cn-beijing.volces.com/api/coding` |
-| 7 | Siliconflow | Pro/MiniMaxAI/MiniMax-M2.5 | Pro/MiniMaxAI/MiniMax-M2, Pro/Anthropic/claude-3-5-sonnet-20241022, Pro/Anthropic/claude-3-opus-20240229 | `https://api.siliconflow.cn/` |
-| 8 | 通义千问 (DashScope) | qwen3.5-plus | qwen3.5-turbo, qwen3.5-max | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
-| 9 | 百度千帆 (Qianfan) | qianfan-code-latest | qianfan-code-turbo, qianfan-code-pro | `https://qianfan.baidubce.com/anthropic/coding` |
+| 6 | 火山方舟 (Ark) | ark-code-latest | doubao-seed-2.0-code, doubao-seed-2.0-pro, minimax-m2.5, glm-4.7, deepseek-v3.2, kimi-k2.5 | `https://ark.cn-beijing.volces.com/api/coding` |
+| 7 | Siliconflow | Pro/MiniMaxAI/MiniMax-M2.5 | Pro/zai-org/GLM-5, Pro/moonshotai/Kimi-K2.5, Pro/zai-org/GLM-4.7, Pro/deepseek-ai/DeepSeek-V3.2, Qwen/Qwen3.5-397B-A17B | `https://api.siliconflow.cn/` |
+| 8 | 通义千问 (DashScope) | qwen3.5-plus | kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
+| 9 | 百度千帆 (Qianfan) | qianfan-code-latest | kimi-k2.5, deepseek-v3.2, glm-5, minimax-m2.5 | `https://qianfan.baidubce.com/anthropic/coding` |
 | 10 | PPChat (Claude Code 代理) | claude-sonnet-4-6 | claude-opus-4-6, claude-haiku-4-5 | `https://code.ppchat.vip` |
+| 11 | 通义千问付费 (DashScope Pay) | qwen3.5-plus | kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://dashscope.aliyuncs.com/apps/anthropic` |
 
 > 除预设模型外，每个提供商都支持输入自定义模型名称。
 
