@@ -5,21 +5,120 @@ setlocal EnableDelayedExpansion
 cls
 
 echo ========================================
-echo Claude Code Configuration Script for Windows
+echo Claude Code Configuration Script
 echo ========================================
 
-:: --- Basic configuration file check and creation ---
-set "CLAUDE_JSON=%USERPROFILE%\.claude.json"
+:: 获取脚本所在目录
+set "SCRIPT_DIR=%~dp0"
+set "CC_CONFIG=%SCRIPT_DIR%cc-config.py"
 
-if not exist "%CLAUDE_JSON%" (
-    echo {"hasCompletedOnboarding": true} > "%CLAUDE_JSON%"
-    echo Created base configuration file: %CLAUDE_JSON%
+:: 检查 cc-config.py 是否存在
+if not exist "%CC_CONFIG%" (
+    echo ❌ Error: cc-config.py not found
+    echo    Expected location: %CC_CONFIG%
+    pause
+    exit /b 1
+)
+
+:: 查找 Python
+set "PYTHON_CMD="
+where python >nul 2>&1
+if %ERRORLEVEL% equ 0 (
+    set "PYTHON_CMD=python"
 ) else (
-    echo Base configuration file exists: %CLAUDE_JSON%
+    where python3 >nul 2>&1
+    if %ERRORLEVEL% equ 0 (
+        set "PYTHON_CMD=python3"
+    )
+)
+
+if not defined PYTHON_CMD (
+    goto :fallback_mode
+)
+
+:: 检查 Python 是否能运行
+%PYTHON_CMD% --version >nul 2>&1
+if %ERRORLEVEL% neq 0 (
+    echo ❌ Error: Python execution failed
+    pause
+    exit /b 1
+)
+
+:: 运行 cc-config.py
+:: 注意: 用户提示在 stderr，环境变量在 stdout
+set "TEMP_ENV=%TEMP%\claude-env.txt"
+%PYTHON_CMD% "%CC_CONFIG%" 2>&1 | findstr /v "##CC_ENV_START##" | findstr /v "##CC_ENV_END##"
+%PYTHON_CMD% "%CC_CONFIG%" 2>nul | findstr /r "##CC_ENV_START##\|##CC_ENV_END##\|=" > "%TEMP_ENV%"
+
+:: 检查是否成功获取环境变量
+findstr "##CC_ENV_START##" "%TEMP_ENV%" >nul 2>&1
+if %ERRORLEVEL% neq 0 (
+    echo.
+    echo Configuration not completed
+    del "%TEMP_ENV%" 2>nul
+    pause
+    exit /b 1
+)
+
+:: 解析环境变量
+set "ANTHROPIC_API_KEY="
+set "ANTHROPIC_BASE_URL="
+set "ANTHROPIC_DEFAULT_HAIKU_MODEL="
+set "ANTHROPIC_DEFAULT_SONNET_MODEL="
+set "ANTHROPIC_DEFAULT_OPUS_MODEL="
+set "CLAUDE_CODE_ADDITIONAL_REQUEST_BODY="
+
+for /f "tokens=1,* delims==" %%a in ('findstr "ANTHROPIC\|CLAUDE" "%TEMP_ENV%"') do (
+    set "%%a=%%b"
+)
+
+del "%TEMP_ENV%" 2>nul
+
+:: 检查是否有配置
+if not defined ANTHROPIC_API_KEY (
+    echo.
+    echo ❌ Error: No valid configuration obtained
+    pause
+    exit /b 1
 )
 
 echo.
-echo Please select your API provider:
+echo ========================================
+echo Starting Claude Code...
+echo ========================================
+echo.
+
+:: 启动 Claude Code
+claude
+
+pause
+exit /b 0
+
+:: ============================================
+:: 降级模式：无 Python 时的简单配置
+:: ============================================
+:fallback_mode
+echo.
+echo ⚠️  Warning: Python not found, entering fallback mode
+echo.
+echo Fallback mode limitations:
+echo   - No API Key caching
+echo   - No multiple model selection
+echo   - No last used memory
+echo.
+echo Recommend installing Python for full functionality:
+echo   Download: https://www.python.org/downloads/
+echo.
+set /p "CONFIRM_FALLBACK=Continue with fallback mode? (y/N): "
+if /i not "!CONFIRM_FALLBACK!"=="Y" (
+    echo Configuration cancelled
+    pause
+    exit /b 0
+)
+echo.
+echo Starting fallback configuration mode...
+echo.
+echo Please select API provider:
 echo   1. Zhipu AI (GLM)
 echo   2. MiniMax (International)
 echo   3. MiniMax (China)
@@ -29,12 +128,11 @@ echo   6. Fangzhou (Ark)
 echo   7. Siliconflow
 echo   8. DashScope (Qwen)
 echo   9. Qianfan (Baidu)
+echo   10. PPChat (Claude Code Proxy)
 echo.
+set /p "CHOICE=Enter your choice [1-10]: "
 
-:: Read user choice
-set /p "CHOICE=Enter your choice [1-9]: "
-
-:: --- Set variables based on selection ---
+:: 根据选择设置变量
 if "%CHOICE%"=="1" (
     set "PROVIDER=ZhipuAI"
     set "BASE_URL=https://open.bigmodel.cn/api/anthropic"
@@ -71,8 +169,12 @@ if "%CHOICE%"=="1" (
     set "PROVIDER=Qianfan"
     set "BASE_URL=https://qianfan.baidubce.com/anthropic/coding"
     set "MODEL=qianfan-code-latest"
+) else if "%CHOICE%"=="10" (
+    set "PROVIDER=PPChat"
+    set "BASE_URL=https://code.ppchat.vip"
+    set "MODEL=claude-sonnet-4-6"
 ) else (
-    echo Invalid selection.
+    echo Invalid choice
     pause
     exit /b 1
 )
@@ -86,217 +188,81 @@ echo Base URL: !BASE_URL!
 echo Model: !MODEL!
 echo ========================================
 
-:: API Key input
+:: API Key 输入
 echo.
-echo Please enter your API Key:
-
-:: Try to read default API Key from existing config
-set "DEFAULT_KEY="
-if exist "%CLAUDE_JSON%" (
-    for /f "tokens=2 delims=:" %%a in ('findstr /C:"anthropic_api_key" "%CLAUDE_JSON%" 2^>nul') do (
-        set "line=%%a"
-        set "line=!line:"=!"
-        set "line=!line: =!"
-        set "line=!line:,=!"
-        set "DEFAULT_KEY=!line!"
-    )
-)
-
-if defined DEFAULT_KEY (
-    set /p "INPUT_KEY=API Key [default: !DEFAULT_KEY!]: "
-    if "!INPUT_KEY!"=="" (
-        set "API_KEY=!DEFAULT_KEY!"
-    ) else (
-        set "API_KEY=!INPUT_KEY!"
-    )
-) else (
-    set /p "API_KEY=API Key: "
-)
-
-:: If still empty, use hardcoded fallback value
-if not defined API_KEY (
-    echo Warning: No API Key provided. Using fallback key.
-    set "API_KEY=bcff1f1c1afb408e9fd3f2791d20793b.kqjL0iiOg1zRTf57"
-)
-
-echo.
-echo Using API Key: %API_KEY:~0,10%...%API_KEY:~-4%
-
-:: Primary API Key input (for ~/.claude/config.json)
-echo.
-echo Please enter your Primary API Key (for config.json):
-set "CONFIG_JSON_PATH=%USERPROFILE%\.claude\config.json"
-set "DEFAULT_PRIMARY_KEY="
-if exist "%CONFIG_JSON_PATH%" (
-    for /f "tokens=2 delims=:" %%a in ('findstr /C:"primaryApiKey" "%CONFIG_JSON_PATH%" 2^>nul') do (
-        set "line=%%a"
-        set "line=!line:"=!"
-        set "line=!line: =!"
-        set "line=!line:,=!"
-        set "DEFAULT_PRIMARY_KEY=!line!"
-    )
-)
-
-if defined DEFAULT_PRIMARY_KEY (
-    set /p "INPUT_PRIMARY_KEY=Primary API Key [default: !DEFAULT_PRIMARY_KEY!]: "
-    if "!INPUT_PRIMARY_KEY!"=="" (
-        set "PRIMARY_API_KEY=!DEFAULT_PRIMARY_KEY!"
-    ) else (
-        set "PRIMARY_API_KEY=!INPUT_PRIMARY_KEY!"
-    )
-) else (
-    set /p "PRIMARY_API_KEY=Primary API Key: "
-)
-
-:: If empty, use API_KEY as fallback
-if not defined PRIMARY_API_KEY (
-    echo Warning: No Primary API Key provided. Using API Key as fallback.
-    set "PRIMARY_API_KEY=%API_KEY%"
-)
-
-echo.
-echo Using Primary API Key: %PRIMARY_API_KEY:~0,10%...%PRIMARY_API_KEY:~-4%
-echo.
-
-echo WARNING: This will update the API configuration!
-set /p "CONFIRM=Continue? (Y/N): "
-
-:: Convert to uppercase and judge
-if /i not "%CONFIRM%"=="Y" (
-    echo Configuration cancelled.
+set /p "API_KEY=Enter API Key: "
+if "!API_KEY!"=="" (
+    echo ❌ API Key cannot be empty
     pause
-    exit /b 0
+    exit /b 1
 )
 
-:: --- Use Python to merge and update config files ---
-echo Updating configuration files...
+:: Primary API Key 输入
+echo.
+set /p "PRIMARY_API_KEY=Enter Primary API Key: "
+if "!PRIMARY_API_KEY!"=="" (
+    set "PRIMARY_API_KEY=!API_KEY!"
+)
 
-:: Define config file paths (needed before Python script creation)
+echo.
+set /p "CONFIRM=Continue? (Y/N): "
+if /i not "!CONFIRM!"=="Y" (
+    echo Configuration cancelled
+    pause
+    exit /b 1
+)
+
+:: 直接覆盖配置文件
+set "CLAUDE_JSON=%USERPROFILE%\.claude.json"
 set "SETTINGS_JSON=%USERPROFILE%\.claude\settings.json"
 set "CONFIG_JSON=%USERPROFILE%\.claude\config.json"
+if not exist "%USERPROFILE%\.claude" mkdir "%USERPROFILE%\.claude"
 
-:: Check if Python is available
-where python >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    set "PYTHON_CMD=python"
-    goto :python_found
-)
-where python3 >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    set "PYTHON_CMD=python3"
-    goto :python_found
-)
-set "PYTHON_CMD="
-goto :update_configs
-
-:python_found
-:: Create temp Python script for updating configs
-set "TEMP_PYTHON=%TEMP%\claude_config_update.py"
-echo import sys, json, os > "%TEMP_PYTHON%"
-echo sys.stdout.reconfigure(encoding='utf-8') >> "%TEMP_PYTHON%"
-echo. >> "%TEMP_PYTHON%"
-echo # Update .claude.json >> "%TEMP_PYTHON%"
-echo claude_json_path = r'%CLAUDE_JSON%' >> "%TEMP_PYTHON%"
-echo new_config = { >> "%TEMP_PYTHON%"
-echo     'anthropic_api_key': r'%API_KEY%', >> "%TEMP_PYTHON%"
-echo     'anthropic_base_url': r'!BASE_URL!', >> "%TEMP_PYTHON%"
-echo     'model': r'!MODEL!', >> "%TEMP_PYTHON%"
-echo     'provider': r'!PROVIDER!', >> "%TEMP_PYTHON%"
-echo     'hasCompletedOnboarding': True >> "%TEMP_PYTHON%"
-echo } >> "%TEMP_PYTHON%"
-echo if os.path.exists(claude_json_path): >> "%TEMP_PYTHON%"
-echo     with open(claude_json_path, 'r', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo         existing_config = json.load(f) >> "%TEMP_PYTHON%"
-echo else: >> "%TEMP_PYTHON%"
-echo     existing_config = {} >> "%TEMP_PYTHON%"
-echo existing_config.update(new_config) >> "%TEMP_PYTHON%"
-echo with open(claude_json_path, 'w', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo     json.dump(existing_config, f, indent=2, ensure_ascii=False) >> "%TEMP_PYTHON%"
-echo print('Updated:', claude_json_path) >> "%TEMP_PYTHON%"
-echo. >> "%TEMP_PYTHON%"
-echo # Update settings.json >> "%TEMP_PYTHON%"
-echo settings_path = r'%SETTINGS_JSON%' >> "%TEMP_PYTHON%"
-echo if not os.path.exists(settings_path): >> "%TEMP_PYTHON%"
-echo     with open(settings_path, 'w', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo         json.dump({}, f) >> "%TEMP_PYTHON%"
-echo with open(settings_path, 'r', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo     settings = json.load(f) >> "%TEMP_PYTHON%"
-echo if 'env' not in settings: >> "%TEMP_PYTHON%"
-echo     settings['env'] = {} >> "%TEMP_PYTHON%"
-echo new_env = { >> "%TEMP_PYTHON%"
-echo     'ANTHROPIC_AUTH_TOKEN': r'%API_KEY%', >> "%TEMP_PYTHON%"
-echo     'ANTHROPIC_BASE_URL': r'!BASE_URL!', >> "%TEMP_PYTHON%"
-echo     'ANTHROPIC_DEFAULT_HAIKU_MODEL': r'!MODEL!', >> "%TEMP_PYTHON%"
-echo     'ANTHROPIC_DEFAULT_SONNET_MODEL': r'!MODEL!', >> "%TEMP_PYTHON%"
-echo     'ANTHROPIC_DEFAULT_OPUS_MODEL': r'!MODEL!' >> "%TEMP_PYTHON%"
-echo } >> "%TEMP_PYTHON%"
-echo if r'%CHOICE%' == '7': >> "%TEMP_PYTHON%"
-echo     new_env['CLAUDE_CODE_ADDITIONAL_REQUEST_BODY'] = '{"thinking":{"type":"enabled"}}' >> "%TEMP_PYTHON%"
-echo else: >> "%TEMP_PYTHON%"
-echo     settings['env'].pop('CLAUDE_CODE_ADDITIONAL_REQUEST_BODY', None) >> "%TEMP_PYTHON%"
-echo settings['env'].update(new_env) >> "%TEMP_PYTHON%"
-echo with open(settings_path, 'w', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo     json.dump(settings, f, indent=2, ensure_ascii=False) >> "%TEMP_PYTHON%"
-echo print('Updated:', settings_path) >> "%TEMP_PYTHON%"
-echo. >> "%TEMP_PYTHON%"
-echo # Update config.json >> "%TEMP_PYTHON%"
-echo config_path = r'%CONFIG_JSON%' >> "%TEMP_PYTHON%"
-echo os.makedirs(os.path.dirname(config_path), exist_ok=True) >> "%TEMP_PYTHON%"
-echo if not os.path.exists(config_path): >> "%TEMP_PYTHON%"
-echo     with open(config_path, 'w', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo         json.dump({}, f) >> "%TEMP_PYTHON%"
-echo with open(config_path, 'r', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo     config = json.load(f) >> "%TEMP_PYTHON%"
-echo config['primaryApiKey'] = r'%PRIMARY_API_KEY%' >> "%TEMP_PYTHON%"
-echo with open(config_path, 'w', encoding='utf-8') as f: >> "%TEMP_PYTHON%"
-echo     json.dump(config, f, indent=2, ensure_ascii=False) >> "%TEMP_PYTHON%"
-echo print('Updated:', config_path) >> "%TEMP_PYTHON%"
-
-:: Run the Python script
-%PYTHON_CMD% "%TEMP_PYTHON%"
-if %ERRORLEVEL% equ 0 (
-    echo Configuration files updated successfully!
-) else (
-    echo Error updating configuration files
-)
-del "%TEMP_PYTHON%" 2>nul
-goto :config_complete
-
-:update_configs
-:: Fallback: Python not found
-echo Warning: Python not found. Using fallback update.
+:: 更新 .claude.json
 (
     echo {
-    echo   "anthropic_api_key": "%API_KEY%",
+    echo   "anthropic_api_key": "!API_KEY!",
     echo   "anthropic_base_url": "!BASE_URL!",
     echo   "model": "!MODEL!",
     echo   "provider": "!PROVIDER!",
     echo   "hasCompletedOnboarding": true
     echo }
-) > "%CLAUDE_JSON%"
-echo Configuration file updated: %CLAUDE_JSON%
+) > "!CLAUDE_JSON!"
+echo Configuration file updated: !CLAUDE_JSON!
 
-:: Also create/update settings.json and config.json in fallback mode
-if not exist "%USERPROFILE%\.claude" mkdir "%USERPROFILE%\.claude"
-if not exist "%SETTINGS_JSON%" echo {} > "%SETTINGS_JSON%"
+:: 更新 settings.json
 (
     echo {
-    echo   "primaryApiKey": "%PRIMARY_API_KEY%"
+    echo   "env": {
+    echo     "ANTHROPIC_AUTH_TOKEN": "!API_KEY!",
+    echo     "ANTHROPIC_BASE_URL": "!BASE_URL!",
+    echo     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "!MODEL!",
+    echo     "ANTHROPIC_DEFAULT_SONNET_MODEL": "!MODEL!",
+    echo     "ANTHROPIC_DEFAULT_OPUS_MODEL": "!MODEL!"
+    echo   }
     echo }
-) > "%CONFIG_JSON%"
-echo Fallback update completed for settings.json and config.json
+) > "!SETTINGS_JSON!"
 
-:config_complete
-echo.
-echo Configuration complete!
-echo.
-echo Starting Claude Code with !PROVIDER! settings...
-echo ================================================================
-echo.
+:: Siliconflow 的特殊处理需要 Python，降级模式忽略此参数
+echo Settings file updated: !SETTINGS_JSON!
 
-pause
+:: 更新 config.json
+(
+    echo {
+    echo   "primaryApiKey": "!PRIMARY_API_KEY!"
+    echo }
+) > "!CONFIG_JSON!"
+echo Config file updated: !CONFIG_JSON!
 
-:: Set the environment variables and start claude
-set "ANTHROPIC_API_KEY=%API_KEY%"
+:: 设置环境变量并启动
+set "ANTHROPIC_API_KEY=!API_KEY!"
 set "ANTHROPIC_BASE_URL=!BASE_URL!"
+echo.
+echo ========================================
+echo Starting Claude Code...
+echo ========================================
+echo.
+pause
+cls
 claude
+pause
