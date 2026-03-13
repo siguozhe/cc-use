@@ -20,7 +20,7 @@ PROVIDERS = [
         "base_url": "https://open.bigmodel.cn/api/anthropic",
         "default_model": "glm-4.7",
         "models": [
-            "glm-4.7", "glm-4-flash", "glm-4-air", "glm-3-turbo"
+            "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-Air"
         ]
     },
     {
@@ -66,7 +66,9 @@ PROVIDERS = [
         "base_url": "https://ark.cn-beijing.volces.com/api/coding",
         "default_model": "ark-code-latest",
         "models": [
-            "ark-code-latest", "ark-code-turbo", "ark-code-pro"
+            "ark-code-latest", "doubao-seed-2.0-code", "doubao-seed-2.0-pro",
+            "doubao-seed-2.0-lite", "doubao-seed-code", "minimax-m2.5",
+            "glm-4.7", "deepseek-v3.2", "kimi-k2.5"
         ]
     },
     {
@@ -75,9 +77,9 @@ PROVIDERS = [
         "base_url": "https://api.siliconflow.cn/",
         "default_model": "Pro/MiniMaxAI/MiniMax-M2.5",
         "models": [
-            "Pro/MiniMaxAI/MiniMax-M2.5", "Pro/MiniMaxAI/MiniMax-M2",
-            "Pro/Anthropic/claude-3-5-sonnet-20241022",
-            "Pro/Anthropic/claude-3-opus-20240229"
+            "Pro/MiniMaxAI/MiniMax-M2.5", "Pro/zai-org/GLM-5",
+            "Pro/moonshotai/Kimi-K2.5", "Pro/zai-org/GLM-4.7",
+            "Pro/deepseek-ai/DeepSeek-V3.2", "Qwen/Qwen3.5-397B-A17B"
         ]
     },
     {
@@ -86,7 +88,8 @@ PROVIDERS = [
         "base_url": "https://coding.dashscope.aliyuncs.com/apps/anthropic",
         "default_model": "qwen3.5-plus",
         "models": [
-            "qwen3.5-plus", "qwen3.5-turbo", "qwen3.5-max"
+            "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
+            "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
         ]
     },
     {
@@ -95,7 +98,8 @@ PROVIDERS = [
         "base_url": "https://qianfan.baidubce.com/anthropic/coding",
         "default_model": "qianfan-code-latest",
         "models": [
-            "qianfan-code-latest", "qianfan-code-turbo", "qianfan-code-pro"
+            "qianfan-code-latest", "kimi-k2.5", "deepseek-v3.2",
+            "glm-5", "minimax-m2.5"
         ]
     },
     {
