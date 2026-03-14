@@ -110,14 +110,48 @@ if !NODE_READY! equ 0 (
     ) else (
         call :print_green "Downloading nvm-windows..."
         set "NVM_INSTALLER=%TEMP%\nvm-setup.zip"
+        set "NVM_URL=https://github.com/coreybutler/nvm-windows/releases/download/1.2.2/nvm-setup.zip"
 
-        if "!DOWNLOAD_CMD!"=="curl" (
-            curl -L -o "!NVM_INSTALLER!" "https://github.com/coreybutler/nvm-windows/releases/download/1.2.2/nvm-setup.zip"
-        ) else (
-            powershell -Command "Invoke-WebRequest -Uri 'https://github.com/coreybutler/nvm-windows/releases/download/1.2.2/nvm-setup.zip' -OutFile '!NVM_INSTALLER!'"
+        :: GitHub 加速镜像列表
+        set "MIRRORS[0]=https://gh-proxy.com/"
+        set "MIRRORS[1]=https://ghproxy.net/"
+        set "MIRRORS[2]=https://github.akams.cn/"
+        set "MIRROR_COUNT=3"
+
+        set "DOWNLOAD_OK=0"
+
+        :: 先尝试加速镜像
+        for /L %%i in (0,1,2) do (
+            if !DOWNLOAD_OK! equ 0 (
+                set "MIRROR_URL=!MIRRORS[%%i]!!NVM_URL!"
+                call :print_yellow "Trying mirror %%i: !MIRRORS[%%i]!"
+
+                if "!DOWNLOAD_CMD!"=="curl" (
+                    curl -L -o "!NVM_INSTALLER!" "!MIRROR_URL!" 2>nul
+                ) else (
+                    powershell -Command "try { Invoke-WebRequest -Uri '!MIRROR_URL!' -OutFile '!NVM_INSTALLER!' -ErrorAction Stop } catch { exit 1 }" 2>nul
+                )
+
+                if exist "!NVM_INSTALLER!" (
+                    set "DOWNLOAD_OK=1"
+                    call :print_green "Download complete from mirror %%i"
+                )
+            )
         )
 
-        if exist "!NVM_INSTALLER!" (
+        :: 如果所有镜像都失败，尝试官方源
+        if !DOWNLOAD_OK! equ 0 (
+            call :print_yellow "All mirrors failed, trying official source..."
+            if "!DOWNLOAD_CMD!"=="curl" (
+                curl -L -o "!NVM_INSTALLER!" "!NVM_URL!"
+            ) else (
+                powershell -Command "Invoke-WebRequest -Uri '!NVM_URL!' -OutFile '!NVM_INSTALLER!'"
+            )
+
+            if exist "!NVM_INSTALLER!" set "DOWNLOAD_OK=1"
+        )
+
+        if !DOWNLOAD_OK! equ 1 (
             call :print_green "Download complete: !NVM_INSTALLER!"
             call :print_yellow "Please run the installer manually to install nvm-windows"
             call :print_yellow "Then run this script again after installation"
@@ -125,7 +159,7 @@ if !NODE_READY! equ 0 (
             pause
             exit /b 0
         ) else (
-            call :print_red "Download failed"
+            call :print_red "Download failed from all sources"
             call :print_yellow "Please install Node.js manually: https://nodejs.org/"
             call :print_yellow "Or install nvm-windows: https://github.com/coreybutler/nvm-windows/releases"
             pause

@@ -112,11 +112,13 @@ if [ $NODE_READY -ne 1 ]; then
     else
         print_green "Installing nvm..."
 
-        # 多源 fallback 安装 nvm
+        # 多源 fallback 安装 nvm (GitHub 加速镜像)
         NVM_SOURCES=(
+            "https://gh-proxy.com/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
+            "https://ghproxy.net/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
+            "https://github.akams.cn/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
+            "https://ghproxy.homeboyc.cn/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
             "https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
-            "https://ghproxy.com/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
-            "https://mirror.ghproxy.com/https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh"
         )
 
         NVM_INSTALLED=0

@@ -139,6 +139,12 @@ cc.bat
 
 **特殊说明**：
 - **Siliconflow (选项 7)**：会自动添加 `CLAUDE_CODE_ADDITIONAL_REQUEST_BODY` 启用思考模式
+- **VS Code 插件用户**：如果使用 VS Code 插件，需要关闭 thinking 模式。请在 VS Code 设置中搜索 `claude-code.disableThinking` 并启用该选项，或在 `settings.json` 中添加：
+  ```json
+  {
+    "claude-code.disableThinking": true
+  }
+  ```
 - 其他选项会自动移除该参数（如果存在）
 
 ---
