@@ -76,12 +76,12 @@ if [ -z "$PYTHON_CMD" ]; then
     case $CHOICE in
         1)
             PROVIDER="GCLI2API_Local"
-            BASE_URL="http://127.0.0.1:2223/v1/messages"
+            BASE_URL="http://127.0.0.1:2223/v1"
             MODEL="gemini-2.5-pro"
             ;;
         2)
             PROVIDER="GCLI2API_Antigravity"
-            BASE_URL="http://127.0.0.1:2223/antigravity/v1/messages"
+            BASE_URL="http://127.0.0.1:2223/antigravity"
             MODEL="claude-sonnet-4-6"
             ;;
         3)

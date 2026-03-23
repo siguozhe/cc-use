@@ -16,24 +16,28 @@ import platform
 PROVIDERS = [
     {
         "id": "GCLI2API_Local",
-        "name": "GCLI2API (本地 2223) - 编程推荐",
-        "base_url": "http://127.0.0.1:2223/v1/messages",
+        "name": "GCLI2API (本地 2223) - Gemini",
+        "base_url": "http://127.0.0.1:2223/v1",
         "default_model": "gemini-2.5-pro",
         "models": [
-            # GCLI 模式 - Gemini 系列（推荐编程）
+            # GCLI 模式 - Gemini 系列
             "gemini-2.5-pro",
             "gemini-2.5-pro-high",
             "gemini-2.5-pro-search",
             "gemini-2.5-flash",
             "gemini-2.5-flash-thinking",
-            # Antigravity 模式 - Claude 系列（推荐编程）
-            "claude-sonnet-4-6",
-            "claude-sonnet-4-6-thinking",
-            "claude-opus-4-6",
-            "claude-opus-4-6-thinking",
-            # 其他模型
+            "gemini-2.5-pro-medium",
+            "gemini-2.5-flash-medium",
+            "gemini-2.5-pro-low",
+            "gemini-2.5-flash-low",
+            "gemini-2.5-pro-minimal",
+            "gemini-2.5-flash-minimal",
+            "gemini-2.5-pro-max",
+            "gemini-2.5-flash-max",
+            # 其他
             "gemini-3-pro-preview",
             "gemini-3-flash-preview",
+            "gemini-3.1-pro-preview",
             "gemini-3.1-flash-lite-preview",
             "chat_20706",
             "chat_23310"
@@ -42,7 +46,7 @@ PROVIDERS = [
     {
         "id": "GCLI2API_Antigravity",
         "name": "GCLI2API Antigravity (本地 2223)",
-        "base_url": "http://127.0.0.1:2223/antigravity/v1/messages",
+        "base_url": "http://127.0.0.1:2223/antigravity",
         "default_model": "claude-sonnet-4-6",
         "models": [
             # Claude 系列
