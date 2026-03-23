@@ -140,11 +140,11 @@ set /p "CHOICE=Enter your choice [1-13]: "
 :: 根据选择设置变量
 if "%CHOICE%"=="1" (
     set "PROVIDER=GCLI2API_Local"
-    set "BASE_URL=http://127.0.0.1:2223/v1"
+    set "BASE_URL=http://127.0.0.1:2223/v1/messages"
     set "MODEL=gemini-2.5-pro"
 ) else if "%CHOICE%"=="2" (
     set "PROVIDER=GCLI2API_Antigravity"
-    set "BASE_URL=http://127.0.0.1:2223/antigravity/v1"
+    set "BASE_URL=http://127.0.0.1:2223/antigravity/v1/messages"
     set "MODEL=claude-sonnet-4-6"
 ) else if "%CHOICE%"=="3" (
     set "PROVIDER=ZhipuAI"

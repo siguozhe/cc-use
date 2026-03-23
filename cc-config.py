@@ -17,7 +17,7 @@ PROVIDERS = [
     {
         "id": "GCLI2API_Local",
         "name": "GCLI2API (本地 2223) - 编程推荐",
-        "base_url": "http://127.0.0.1:2223/v1",
+        "base_url": "http://127.0.0.1:2223/v1/messages",
         "default_model": "gemini-2.5-pro",
         "models": [
             # GCLI 模式 - Gemini 系列（推荐编程）
@@ -42,7 +42,7 @@ PROVIDERS = [
     {
         "id": "GCLI2API_Antigravity",
         "name": "GCLI2API Antigravity (本地 2223)",
-        "base_url": "http://127.0.0.1:2223/antigravity/v1",
+        "base_url": "http://127.0.0.1:2223/antigravity/v1/messages",
         "default_model": "claude-sonnet-4-6",
         "models": [
             # Claude 系列
