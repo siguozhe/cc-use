@@ -116,12 +116,13 @@ if !NODE_READY! equ 0 (
         set "MIRRORS[0]=https://gh-proxy.com/"
         set "MIRRORS[1]=https://ghproxy.net/"
         set "MIRRORS[2]=https://github.akams.cn/"
-        set "MIRROR_COUNT=3"
+        set "MIRRORS[3]=https://ghproxy.homeboyc.cn/"
+        set "MIRROR_COUNT=4"
 
         set "DOWNLOAD_OK=0"
 
         :: 先尝试加速镜像
-        for /L %%i in (0,1,2) do (
+        for /L %%i in (0,1,3) do (
             if !DOWNLOAD_OK! equ 0 (
                 set "MIRROR_URL=!MIRRORS[%%i]!!NVM_URL!"
                 call :print_yellow "Trying mirror %%i: !MIRRORS[%%i]!"
@@ -167,18 +168,11 @@ if !NODE_READY! equ 0 (
         )
     )
 
-    :: --- 通过 nvm 安装 Node.js LTS ---
+    :: --- 通过 nvm 安装 Node.js LTS（镜像优先，官方源兜底）---
     call :print_green "Installing Node.js LTS via nvm..."
 
-    :: 先尝试官方源
-    nvm install lts
-    if !ERRORLEVEL! equ 0 (
-        call :print_green "Node.js LTS installed from official source"
-        goto :nvm_node_done
-    )
-
     :: 尝试淘宝镜像
-    call :print_yellow "Official source failed, trying Taobao mirror..."
+    call :print_yellow "Trying Taobao mirror..."
     nvm node_mirror https://npmmirror.com/mirrors/node/
     nvm npm_mirror https://npmmirror.com/mirrors/npm/
     nvm install lts
@@ -204,6 +198,16 @@ if !NODE_READY! equ 0 (
     nvm install lts
     if !ERRORLEVEL! equ 0 (
         call :print_green "Node.js LTS installed from USTC mirror"
+        goto :nvm_node_done
+    )
+
+    :: 最后尝试官方源
+    call :print_yellow "All mirrors failed, trying official source..."
+    nvm node_mirror https://nodejs.org/dist/
+    nvm npm_mirror https://registry.npmjs.org/
+    nvm install lts
+    if !ERRORLEVEL! equ 0 (
+        call :print_green "Node.js LTS installed from official source"
         goto :nvm_node_done
     )
 

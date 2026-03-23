@@ -15,6 +15,57 @@ import platform
 # ==================== 配置定义 ====================
 PROVIDERS = [
     {
+        "id": "GCLI2API_Local",
+        "name": "GCLI2API (本地 2223) - 编程推荐",
+        "base_url": "http://127.0.0.1:2223/v1",
+        "default_model": "gemini-2.5-pro",
+        "models": [
+            # GCLI 模式 - Gemini 系列（推荐编程）
+            "gemini-2.5-pro",
+            "gemini-2.5-pro-high",
+            "gemini-2.5-pro-search",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-thinking",
+            # Antigravity 模式 - Claude 系列（推荐编程）
+            "claude-sonnet-4-6",
+            "claude-sonnet-4-6-thinking",
+            "claude-opus-4-6",
+            "claude-opus-4-6-thinking",
+            # 其他模型
+            "gemini-3-pro-preview",
+            "gemini-3-flash-preview",
+            "gemini-3.1-flash-lite-preview",
+            "chat_20706",
+            "chat_23310"
+        ]
+    },
+    {
+        "id": "GCLI2API_Antigravity",
+        "name": "GCLI2API Antigravity (本地 2223)",
+        "base_url": "http://127.0.0.1:2223/antigravity/v1",
+        "default_model": "claude-sonnet-4-6",
+        "models": [
+            # Claude 系列
+            "claude-sonnet-4-6",
+            "claude-sonnet-4-6-thinking",
+            "claude-opus-4-6",
+            "claude-opus-4-6-thinking",
+            # Gemini 系列
+            "gemini-2.5-pro",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-thinking",
+            "gemini-2.5-flash-lite",
+            "gemini-3-pro-high",
+            "gemini-3-pro-low",
+            "gemini-3-flash",
+            "gemini-3.1-pro-high",
+            "gemini-3.1-pro-low",
+            "gemini-3.1-flash-image",
+            # 其他
+            "gpt-oss-120b-medium"
+        ]
+    },
+    {
         "id": "ZhipuAI",
         "name": "Zhipu AI (GLM)",
         "base_url": "https://open.bigmodel.cn/api/anthropic",

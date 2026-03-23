@@ -121,62 +121,72 @@ echo.
 echo Starting fallback configuration mode...
 echo.
 echo Please select API provider:
-echo   1. Zhipu AI (GLM)
-echo   2. MiniMax (International)
-echo   3. MiniMax (China)
-echo   4. Kimi (Moonshot AI)
-echo   5. Anthropic Official
-echo   6. Fangzhou (Ark)
-echo   7. Siliconflow
-echo   8. DashScope (Qwen)
-echo   9. Qianfan (Baidu)
-echo   10. PPChat (Claude Code Proxy)
-echo   11. DashScope Pay (Qwen)
+echo   1. GCLI2API (Local 2223) - Programming Recommended
+echo   2. GCLI2API Antigravity (Local 2223)
+echo   3. Zhipu AI (GLM)
+echo   4. MiniMax (International)
+echo   5. MiniMax (China)
+echo   6. Kimi (Moonshot AI)
+echo   7. Anthropic Official
+echo   8. Fangzhou (Ark)
+echo   9. Siliconflow
+echo   10. DashScope (Qwen)
+echo   11. Qianfan (Baidu)
+echo   12. PPChat (Claude Code Proxy)
+echo   13. DashScope Pay (Qwen)
 echo.
-set /p "CHOICE=Enter your choice [1-11]: "
+set /p "CHOICE=Enter your choice [1-13]: "
 
 :: 根据选择设置变量
 if "%CHOICE%"=="1" (
+    set "PROVIDER=GCLI2API_Local"
+    set "BASE_URL=http://127.0.0.1:2223/v1"
+    set "MODEL=gemini-2.5-pro"
+) else if "%CHOICE%"=="2" (
+    set "PROVIDER=GCLI2API_Antigravity"
+    set "BASE_URL=http://127.0.0.1:2223/antigravity/v1"
+    set "MODEL=claude-sonnet-4-6"
+) else if "%CHOICE%"=="3" (
     set "PROVIDER=ZhipuAI"
     set "BASE_URL=https://open.bigmodel.cn/api/anthropic"
     set "MODEL=glm-4.7"
-) else if "%CHOICE%"=="2" (
+) else if "%CHOICE%"=="4" (
     set "PROVIDER=MiniMax_Intl"
     set "BASE_URL=https://api.minimax.io/anthropic"
     set "MODEL=MiniMax-M2.1"
-) else if "%CHOICE%"=="3" (
+) else if "%CHOICE%"=="5" (
     set "PROVIDER=MiniMax_CN"
     set "BASE_URL=https://api.minimaxi.com/anthropic"
     set "MODEL=MiniMax-M2.1"
-) else if "%CHOICE%"=="4" (
+) else if "%CHOICE%"=="6" (
     set "PROVIDER=Kimi"
     set "BASE_URL=https://api.moonshot.cn/anthropic/"
     set "MODEL=kimi-k2-turbo-preview"
-) else if "%CHOICE%"=="5" (
+) else if "%CHOICE%"=="7" (
     set "PROVIDER=Anthropic"
     set "BASE_URL=https://api.anthropic.com"
     set "MODEL=claude-3-5-sonnet-20241022"
-) else if "%CHOICE%"=="6" (
+) else if "%CHOICE%"=="8" (
     set "PROVIDER=Fangzhou"
     set "BASE_URL=https://ark.cn-beijing.volces.com/api/coding"
     set "MODEL=ark-code-latest"
-) else if "%CHOICE%"=="7" (
+) else if "%CHOICE%"=="9" (
     set "PROVIDER=Siliconflow"
     set "BASE_URL=https://api.siliconflow.cn/"
     set "MODEL=Pro/MiniMaxAI/MiniMax-M2.5"
-) else if "%CHOICE%"=="8" (
+) else if "%CHOICE%"=="10" (
     set "PROVIDER=DashScope"
     set "BASE_URL=https://coding.dashscope.aliyuncs.com/apps/anthropic"
     set "MODEL=qwen3.5-plus"
-) else if "%CHOICE%"=="9" (
+) else if "%CHOICE%"=="11" (
     set "PROVIDER=Qianfan"
     set "BASE_URL=https://qianfan.baidubce.com/anthropic/coding"
     set "MODEL=qianfan-code-latest"
-) else if "%CHOICE%"=="10" (
+) else if "%CHOICE%"=="12" (
     set "PROVIDER=PPChat"
     set "BASE_URL=https://code.ppchat.vip"
     set "MODEL=claude-sonnet-4-6"
-) else if "%CHOICE%"=="11" (
+) else if "%CHOICE%"=="13" (
     set "PROVIDER=DashScope_Pay"
     set "BASE_URL=https://dashscope.aliyuncs.com/apps/anthropic"
     set "MODEL=qwen3.5-plus"

@@ -157,12 +157,12 @@ if [ $NODE_READY -ne 1 ]; then
     # --- 通过 nvm 安装 Node.js LTS ---
     print_green "Installing Node.js LTS via nvm..."
 
-    # Node.js 镜像源列表
+    # Node.js 镜像源列表（镜像优先，官方源兜底）
     NODE_MIRRORS=(
-        "official|https://nodejs.org/dist/"
         "taobao|https://npmmirror.com/mirrors/node/"
         "huawei|https://repo.huaweicloud.com/nodejs/"
         "ustc|https://mirrors.ustc.edu.cn/nodejs-release/"
+        "official|https://nodejs.org/dist/"
     )
 
     NODE_INSTALLED=0
@@ -172,6 +172,8 @@ if [ $NODE_READY -ne 1 ]; then
         if [ "$mirror_name" != "official" ]; then
             print_yellow "Switching to $mirror_name mirror..."
             export NVM_NODEJS_ORG_MIRROR="$mirror_url"
+        else
+            unset NVM_NODEJS_ORG_MIRROR
         fi
 
         print_green "Trying $mirror_name source..."
