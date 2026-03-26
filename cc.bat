@@ -134,8 +134,9 @@ echo   10. DashScope (Qwen)
 echo   11. Qianfan (Baidu)
 echo   12. PPChat (Claude Code Proxy)
 echo   13. DashScope Pay (Qwen)
+echo   14. CLI Proxy API (Local 2222)
 echo.
-set /p "CHOICE=Enter your choice [1-13]: "
+set /p "CHOICE=Enter your choice [1-14]: "
 
 :: 根据选择设置变量
 if "%CHOICE%"=="1" (
@@ -190,6 +191,10 @@ if "%CHOICE%"=="1" (
     set "PROVIDER=DashScope_Pay"
     set "BASE_URL=https://dashscope.aliyuncs.com/apps/anthropic"
     set "MODEL=qwen3.5-plus"
+) else if "%CHOICE%"=="14" (
+    set "PROVIDER=CLIProxyAPI"
+    set "BASE_URL=http://127.0.0.1:2222"
+    set "MODEL=qwen3-max"
 ) else (
     echo Invalid choice
     pause

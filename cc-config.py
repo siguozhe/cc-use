@@ -175,6 +175,16 @@ PROVIDERS = [
             "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
             "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
         ]
+    },
+    {
+        "id": "CLIProxyAPI",
+        "name": "CLI Proxy API (本地 2222)",
+        "base_url": "http://127.0.0.1:2222",
+        "default_model": "qwen3-max",
+        "models": [
+            "qwen3-max", "deepseek-v3", "deepseek-v3.2",
+            "kimi-k2", "gemini-3-pro-preview"
+        ]
     }
 ]
 
