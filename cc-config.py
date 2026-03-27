@@ -75,7 +75,7 @@ PROVIDERS = [
         "base_url": "https://open.bigmodel.cn/api/anthropic",
         "default_model": "glm-4.7",
         "models": [
-            "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-Air"
+            "glm-5.1", "glm-5", "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-Air"
         ]
     },
     {
