@@ -15,6 +15,22 @@ import platform
 # ==================== 配置定义 ====================
 PROVIDERS = [
     {
+        "id": "DeepSeek",
+        "name": "DeepSeek (Anthropic API)",
+        "base_url": "https://api.deepseek.com/anthropic",
+        "default_model": "deepseek-v4-pro[1m]",
+        "models": [
+            "deepseek-v4-pro[1m]",
+            "deepseek-v4-flash[1m]",
+            "deepseek-v4-pro",
+            "deepseek-v4-flash"
+        ],
+        "haiku_model": "deepseek-v4-flash",
+        "subagent_model": "deepseek-v4-flash",
+        "effort_level": "max",
+        "auto_compact_window": 400000
+    },
+    {
         "id": "GCLI2API_Local",
         "name": "GCLI2API (本地 2223) - Gemini",
         "base_url": "http://127.0.0.1:2223/v1",
@@ -301,22 +317,52 @@ def update_settings_json(provider, model, api_key):
             config = {}
         if "env" not in config:
             config["env"] = {}
+
+        # 基础环境变量
         env = {
             "ANTHROPIC_AUTH_TOKEN": api_key,
             "ANTHROPIC_BASE_URL": provider["base_url"],
-            "ANTHROPIC_DEFAULT_HAIKU_MODEL": model,
             "ANTHROPIC_DEFAULT_SONNET_MODEL": model,
             "ANTHROPIC_DEFAULT_OPUS_MODEL": model
         }
-        # Siliconflow 特殊配置
+
+        # Haiku 模型：DeepSeek 使用独立的 haiku_model，其他用主模型
+        if provider.get("haiku_model"):
+            env["ANTHROPIC_DEFAULT_HAIKU_MODEL"] = provider["haiku_model"]
+        else:
+            env["ANTHROPIC_DEFAULT_HAIKU_MODEL"] = model
+
+        # Siliconflow 特殊配置 - 启用思考模式
         if provider["id"] == "Siliconflow":
             env["CLAUDE_CODE_ADDITIONAL_REQUEST_BODY"] = '{"thinking":{"type":"enabled"}}'
         else:
             config["env"].pop("CLAUDE_CODE_ADDITIONAL_REQUEST_BODY", None)
+
+        # DeepSeek 特殊配置
+        if provider["id"] == "DeepSeek":
+            # Subagent 模型
+            if provider.get("subagent_model"):
+                env["CLAUDE_CODE_SUBAGENT_MODEL"] = provider["subagent_model"]
+            # Effort level
+            if provider.get("effort_level"):
+                env["CLAUDE_CODE_EFFORT_LEVEL"] = provider["effort_level"]
+            # 自动压缩窗口（400k tokens）
+            if provider.get("auto_compact_window"):
+                env["CLAUDE_CODE_AUTO_COMPACT_WINDOW"] = str(provider["auto_compact_window"])
+        else:
+            config["env"].pop("CLAUDE_CODE_SUBAGENT_MODEL", None)
+            config["env"].pop("CLAUDE_CODE_EFFORT_LEVEL", None)
+            config["env"].pop("CLAUDE_CODE_AUTO_COMPACT_WINDOW", None)
+
+        # 移除旧的 contextManagement 配置（改用环境变量）
+        config.pop("contextManagement", None)
+
         config["env"].update(env)
         with open(paths["settings_json"], "w", encoding="utf-8") as f:
             json.dump(config, f, ensure_ascii=False, indent=2)
         print_stderr(f"✅ 更新成功: {paths['settings_json']}")
+        if provider["id"] == "DeepSeek":
+            print_stderr("   已启用 1M 上下文支持（压缩窗口 400k）")
     except Exception as e:
         print_stderr(f"❌ 更新失败 {paths['settings_json']}: {e}")
 
@@ -505,9 +551,22 @@ def main():
     print("##CC_ENV_START##")
     print(f"ANTHROPIC_API_KEY={api_key}")
     print(f"ANTHROPIC_BASE_URL={provider['base_url']}")
-    print(f"ANTHROPIC_DEFAULT_HAIKU_MODEL={model}")
     print(f"ANTHROPIC_DEFAULT_SONNET_MODEL={model}")
     print(f"ANTHROPIC_DEFAULT_OPUS_MODEL={model}")
+    # Haiku 模型
+    if provider.get("haiku_model"):
+        print(f"ANTHROPIC_DEFAULT_HAIKU_MODEL={provider['haiku_model']}")
+    else:
+        print(f"ANTHROPIC_DEFAULT_HAIKU_MODEL={model}")
+    # DeepSeek 特殊配置
+    if provider["id"] == "DeepSeek":
+        if provider.get("subagent_model"):
+            print(f"CLAUDE_CODE_SUBAGENT_MODEL={provider['subagent_model']}")
+        if provider.get("effort_level"):
+            print(f"CLAUDE_CODE_EFFORT_LEVEL={provider['effort_level']}")
+        if provider.get("auto_compact_window"):
+            print(f"CLAUDE_CODE_AUTO_COMPACT_WINDOW={provider['auto_compact_window']}")
+    # Siliconflow 特殊配置
     if provider["id"] == "Siliconflow":
         print('CLAUDE_CODE_ADDITIONAL_REQUEST_BODY={"thinking":{"type":"enabled"}}')
     print("##CC_ENV_END##")
