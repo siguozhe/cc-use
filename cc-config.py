@@ -323,7 +323,8 @@ def update_settings_json(provider, model, api_key):
             "ANTHROPIC_AUTH_TOKEN": api_key,
             "ANTHROPIC_BASE_URL": provider["base_url"],
             "ANTHROPIC_DEFAULT_SONNET_MODEL": model,
-            "ANTHROPIC_DEFAULT_OPUS_MODEL": model
+            "ANTHROPIC_DEFAULT_OPUS_MODEL": model,
+            "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
         }
 
         # Haiku 模型：DeepSeek 使用独立的 haiku_model，其他用主模型
@@ -553,6 +554,7 @@ def main():
     print(f"ANTHROPIC_BASE_URL={provider['base_url']}")
     print(f"ANTHROPIC_DEFAULT_SONNET_MODEL={model}")
     print(f"ANTHROPIC_DEFAULT_OPUS_MODEL={model}")
+    print("CLAUDE_CODE_ATTRIBUTION_HEADER=0")
     # Haiku 模型
     if provider.get("haiku_model"):
         print(f"ANTHROPIC_DEFAULT_HAIKU_MODEL={provider['haiku_model']}")
