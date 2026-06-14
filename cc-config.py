@@ -89,10 +89,13 @@ PROVIDERS = [
         "id": "ZhipuAI",
         "name": "Zhipu AI (GLM)",
         "base_url": "https://open.bigmodel.cn/api/anthropic",
-        "default_model": "glm-4.7",
+        "default_model": "glm-5.2[1m]",
         "models": [
-            "glm-5.1", "glm-5", "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-Air"
-        ]
+            "glm-5.2[1m]", "glm-5.2", "glm-5.1", "glm-5", "glm-4.7",
+            "glm-4.6", "glm-4.5", "glm-4.5-air"
+        ],
+        "haiku_model": "glm-4.5-air",
+        "auto_compact_window": 1000000
     },
     {
         "id": "MiniMax_Intl",
@@ -157,9 +160,9 @@ PROVIDERS = [
         "id": "DashScope",
         "name": "DashScope (Qwen)",
         "base_url": "https://coding.dashscope.aliyuncs.com/apps/anthropic",
-        "default_model": "qwen3.5-plus",
+        "default_model": "qwen3.7-plus",
         "models": [
-            "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
+            "qwen3.7-plus", "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
             "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
         ]
     },
@@ -186,9 +189,9 @@ PROVIDERS = [
         "id": "DashScope_Pay",
         "name": "DashScope Pay (Qwen)",
         "base_url": "https://dashscope.aliyuncs.com/apps/anthropic",
-        "default_model": "qwen3.5-plus",
+        "default_model": "qwen3.7-plus",
         "models": [
-            "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
+            "qwen3.7-plus", "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
             "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
         ]
     },
@@ -327,7 +330,7 @@ def update_settings_json(provider, model, api_key):
             "CLAUDE_CODE_ATTRIBUTION_HEADER": "0"
         }
 
-        # Haiku 模型：DeepSeek 使用独立的 haiku_model，其他用主模型
+        # Haiku 模型：provider 显式指定 haiku_model 时使用，否则用主模型
         if provider.get("haiku_model"):
             env["ANTHROPIC_DEFAULT_HAIKU_MODEL"] = provider["haiku_model"]
         else:
@@ -347,12 +350,14 @@ def update_settings_json(provider, model, api_key):
             # Effort level
             if provider.get("effort_level"):
                 env["CLAUDE_CODE_EFFORT_LEVEL"] = provider["effort_level"]
-            # 自动压缩窗口（400k tokens）
-            if provider.get("auto_compact_window"):
-                env["CLAUDE_CODE_AUTO_COMPACT_WINDOW"] = str(provider["auto_compact_window"])
         else:
             config["env"].pop("CLAUDE_CODE_SUBAGENT_MODEL", None)
             config["env"].pop("CLAUDE_CODE_EFFORT_LEVEL", None)
+
+        # 自动压缩窗口（通用：支持 DeepSeek/ZhipuAI 等）
+        if provider.get("auto_compact_window"):
+            env["CLAUDE_CODE_AUTO_COMPACT_WINDOW"] = str(provider["auto_compact_window"])
+        else:
             config["env"].pop("CLAUDE_CODE_AUTO_COMPACT_WINDOW", None)
 
         # 移除旧的 contextManagement 配置（改用环境变量）
@@ -362,8 +367,8 @@ def update_settings_json(provider, model, api_key):
         with open(paths["settings_json"], "w", encoding="utf-8") as f:
             json.dump(config, f, ensure_ascii=False, indent=2)
         print_stderr(f"✅ 更新成功: {paths['settings_json']}")
-        if provider["id"] == "DeepSeek":
-            print_stderr("   已启用 1M 上下文支持（压缩窗口 400k）")
+        if provider.get("auto_compact_window"):
+            print_stderr(f"   已启用大上下文支持（压缩窗口 {provider['auto_compact_window']//1000}k）")
     except Exception as e:
         print_stderr(f"❌ 更新失败 {paths['settings_json']}: {e}")
 
@@ -566,8 +571,9 @@ def main():
             print(f"CLAUDE_CODE_SUBAGENT_MODEL={provider['subagent_model']}")
         if provider.get("effort_level"):
             print(f"CLAUDE_CODE_EFFORT_LEVEL={provider['effort_level']}")
-        if provider.get("auto_compact_window"):
-            print(f"CLAUDE_CODE_AUTO_COMPACT_WINDOW={provider['auto_compact_window']}")
+    # 通用：自动压缩窗口（DeepSeek/ZhipuAI 等）
+    if provider.get("auto_compact_window"):
+        print(f"CLAUDE_CODE_AUTO_COMPACT_WINDOW={provider['auto_compact_window']}")
     # Siliconflow 特殊配置
     if provider["id"] == "Siliconflow":
         print('CLAUDE_CODE_ADDITIONAL_REQUEST_BODY={"thinking":{"type":"enabled"}}')
