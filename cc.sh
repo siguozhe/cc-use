@@ -63,7 +63,7 @@ if [ -z "$PYTHON_CMD" ]; then
     echo "  5. MiniMax (China)"
     echo "  6. Kimi (Moonshot AI)"
     echo "  7. Anthropic Official"
-    echo "  8. Fangzhou (Ark)"
+    echo "  8. Fangzhou (Ark) Agent Plan"
     echo "  9. Siliconflow"
     echo " 10. DashScope (Qwen)"
     echo " 11. Qianfan (Baidu)"
@@ -112,7 +112,7 @@ if [ -z "$PYTHON_CMD" ]; then
             ;;
         8)
             PROVIDER="Fangzhou"
-            BASE_URL="https://ark.cn-beijing.volces.com/api/coding"
+            BASE_URL="https://ark.cn-beijing.volces.com/api/plan"
             MODEL="ark-code-latest"
             ;;
         9)

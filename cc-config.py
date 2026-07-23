@@ -28,7 +28,7 @@ PROVIDERS = [
         "haiku_model": "deepseek-v4-flash",
         "subagent_model": "deepseek-v4-flash",
         "effort_level": "max",
-        "auto_compact_window": 400000
+        "auto_compact_window": 1000000
     },
     {
         "id": "GCLI2API_Local",
@@ -136,14 +136,13 @@ PROVIDERS = [
     },
     {
         "id": "Fangzhou",
-        "name": "Fangzhou (Ark)",
-        "base_url": "https://ark.cn-beijing.volces.com/api/coding",
+        "name": "Fangzhou (Ark) Agent Plan",
+        "base_url": "https://ark.cn-beijing.volces.com/api/plan",
         "default_model": "ark-code-latest",
         "models": [
-            "ark-code-latest", "doubao-seed-2.0-code", "doubao-seed-2.0-pro",
-            "doubao-seed-2.0-lite", "doubao-seed-code", "minimax-m2.5",
-            "glm-4.7", "deepseek-v3.2", "kimi-k2.5"
-        ]
+            "ark-code-latest", "kimi-k3", "glm-5.2", "deepseek-v4-flash", "deepseek-v4-pro"
+        ],
+        "auto_compact_window": 1000000
     },
     {
         "id": "Siliconflow",
