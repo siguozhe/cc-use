@@ -89,9 +89,9 @@ PROVIDERS = [
         "id": "ZhipuAI",
         "name": "Zhipu AI (GLM)",
         "base_url": "https://open.bigmodel.cn/api/anthropic",
-        "default_model": "glm-5.2[1m]",
+        "default_model": "glm-5.3[1m]",
         "models": [
-            "glm-5.2[1m]", "glm-5.2", "glm-5.1", "glm-5", "glm-4.7",
+            "glm-5.3[1m]", "glm-5.3", "glm-5.1", "glm-5", "glm-4.7",
             "glm-4.6", "glm-4.5", "glm-4.5-air"
         ],
         "haiku_model": "glm-4.5-air",
@@ -140,7 +140,7 @@ PROVIDERS = [
         "base_url": "https://ark.cn-beijing.volces.com/api/plan",
         "default_model": "ark-code-latest",
         "models": [
-            "ark-code-latest", "kimi-k3", "glm-5.2", "deepseek-v4-flash", "deepseek-v4-pro"
+            "ark-code-latest", "kimi-k3", "glm-5.3", "deepseek-v4-flash", "deepseek-v4-pro"
         ],
         "auto_compact_window": 1000000
     },
