@@ -124,7 +124,7 @@ cc.bat
 | 序号 | 提供商 | 默认模型 | 可选模型 | Base URL |
 | ------ | -------- | ---------- | ---------- | ---------- |
 | 1 | DeepSeek (Anthropic API) | deepseek-v4-pro[1m] | deepseek-v4-flash[1m], deepseek-v4-pro, deepseek-v4-flash | `https://api.deepseek.com/anthropic` |
-| 2 | Zhipu AI (智谱) | glm-5.3[1m] | glm-5.3, glm-5.1, glm-5, glm-4.7, glm-4.6, glm-4.5, glm-4.5-air | `https://open.bigmodel.cn/api/anthropic` |
+| 2 | Zhipu AI (智谱) | glm-5.3[1m] | glm-5.3, glm-5.3-flash, glm-5.1, glm-5, glm-4.7, glm-4.6, glm-4.5, glm-4.5-air | `https://open.bigmodel.cn/api/anthropic` |
 | 3 | MiniMax (国际) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimax.io/anthropic` |
 | 4 | MiniMax (中国) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimaxi.com/anthropic` |
 | 5 | Kimi (月之暗面) | kimi-k2-turbo-preview | kimi-pro, kimi-max | `https://api.moonshot.cn/anthropic/` |
@@ -145,7 +145,7 @@ cc.bat
   - 自动设置压缩窗口为 400k tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000`）
   - 自动设置 `CLAUDE_CODE_EFFORT_LEVEL=max`
 - **Zhipu AI (选项 2)**：
-  - GLM-5.3 模型名带 `[1m]` 后缀启用 1M 上下文（如 `glm-5.3[1m]`）
+  - GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀启用 1M 上下文（如 `glm-5.3[1m]`）
   - Haiku 模型自动使用 `glm-4.5-air`（快模型）
   - 自动设置压缩窗口为 1M tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000`）
   - 可在 Claude Code 会话中输入 `/effort` 切换思考强度
@@ -224,7 +224,7 @@ Zhipu AI 选项会额外添加：
 }
 ```
 
-> **Zhipu AI 说明**：GLM-5.3 模型名带 `[1m]` 后缀（如 `glm-5.3[1m]`）可启用 1M 上下文。会话中输入 `/effort` 切换思考强度，`max` 推荐用于编码任务。
+> **Zhipu AI 说明**：GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀（如 `glm-5.3[1m]`）可启用 1M 上下文。会话中输入 `/effort` 切换思考强度，`max` 推荐用于编码任务。
 
 ### 3. `~/.claude/config.json`
 

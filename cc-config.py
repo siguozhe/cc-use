@@ -91,8 +91,8 @@ PROVIDERS = [
         "base_url": "https://open.bigmodel.cn/api/anthropic",
         "default_model": "glm-5.3[1m]",
         "models": [
-            "glm-5.3[1m]", "glm-5.3", "glm-5.1", "glm-5", "glm-4.7",
-            "glm-4.6", "glm-4.5", "glm-4.5-air"
+            "glm-5.3[1m]", "glm-5.3", "glm-5.3-flash[1m]", "glm-5.3-flash",
+            "glm-5.1", "glm-5", "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-air"
         ],
         "haiku_model": "glm-4.5-air",
         "auto_compact_window": 1000000
