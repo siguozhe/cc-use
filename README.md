@@ -132,7 +132,7 @@ cc.bat
 | 7 | 火山方舟 (Ark) | ark-code-latest | doubao-seed-2.0-code, doubao-seed-2.0-pro, minimax-m2.5, glm-4.7, deepseek-v3.2, kimi-k2.5 | `https://ark.cn-beijing.volces.com/api/coding` |
 | 8 | Siliconflow | Pro/MiniMaxAI/MiniMax-M2.5 | Pro/zai-org/GLM-5, Pro/moonshotai/Kimi-K2.5, Pro/zai-org/GLM-4.7, Pro/deepseek-ai/DeepSeek-V3.2, Qwen/Qwen3.5-397B-A17B | `https://api.siliconflow.cn/` |
 | 9 | 通义千问 (DashScope) | qwen3.7-plus | qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
-| 10 | 百度千帆 (Qianfan) | qianfan-code-latest | kimi-k2.5, deepseek-v3.2, glm-5, minimax-m2.5 | `https://qianfan.baidubce.com/anthropic/coding` |
+| 10 | 百度千帆 (Qianfan) Token Plan | qianfan-code-latest | ernie-5.5-flash-preview, ernie-light-dt-1.0, glm-5.3, glm-5.2, glm-5.1, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-1017, deepseek-v4-pro, deepseek-v4-pro-0813, deepseek-v4-flash-0731, unlimited-ocr-2 | `https://qianfan.baidubce.com/anthropic/tokenplan/personal` |
 | 11 | PPChat (Claude Code 代理) | claude-sonnet-4-6 | claude-opus-4-6, claude-haiku-4-5 | `https://code.ppchat.vip` |
 | 12 | 通义千问付费 (DashScope Pay) | qwen3.7-plus | qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://dashscope.aliyuncs.com/apps/anthropic` |
 

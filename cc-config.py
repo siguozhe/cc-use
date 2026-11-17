@@ -167,12 +167,16 @@ PROVIDERS = [
     },
     {
         "id": "Qianfan",
-        "name": "Qianfan (Baidu)",
-        "base_url": "https://qianfan.baidubce.com/anthropic/coding",
+        "name": "Qianfan (Baidu) Token Plan",
+        "base_url": "https://qianfan.baidubce.com/anthropic/tokenplan/personal",
         "default_model": "qianfan-code-latest",
         "models": [
-            "qianfan-code-latest", "kimi-k2.5", "deepseek-v3.2",
-            "glm-5", "minimax-m2.5"
+            "qianfan-code-latest",
+            "ernie-5.5-flash-preview", "ernie-light-dt-1.0",
+            "glm-5.3", "glm-5.2", "glm-5.1", "glm-5.3-flash",
+            "deepseek-v4.1-flash", "deepseek-v4.1-flash-1017",
+            "deepseek-v4-pro", "deepseek-v4-pro-0813", "deepseek-v4-flash-0731",
+            "unlimited-ocr-2"
         ]
     },
     {

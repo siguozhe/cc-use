@@ -131,7 +131,7 @@ echo   7. Anthropic Official
 echo   8. Fangzhou (Ark)
 echo   9. Siliconflow
 echo   10. DashScope (Qwen)
-echo   11. Qianfan (Baidu)
+echo   11. Qianfan (Baidu) Token Plan
 echo   12. PPChat (Claude Code Proxy)
 echo   13. DashScope Pay (Qwen)
 echo   14. CLI Proxy API (Local 2222)
@@ -181,7 +181,7 @@ if "%CHOICE%"=="1" (
     set "MODEL=qwen3.5-plus"
 ) else if "%CHOICE%"=="11" (
     set "PROVIDER=Qianfan"
-    set "BASE_URL=https://qianfan.baidubce.com/anthropic/coding"
+    set "BASE_URL=https://qianfan.baidubce.com/anthropic/tokenplan/personal"
     set "MODEL=qianfan-code-latest"
 ) else if "%CHOICE%"=="12" (
     set "PROVIDER=PPChat"

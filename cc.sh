@@ -66,7 +66,7 @@ if [ -z "$PYTHON_CMD" ]; then
     echo "  8. Fangzhou (Ark) Agent Plan"
     echo "  9. Siliconflow"
     echo " 10. DashScope (Qwen)"
-    echo " 11. Qianfan (Baidu)"
+    echo " 11. Qianfan (Baidu) Token Plan"
     echo " 12. PPChat (Claude Code Proxy)"
     echo " 13. DashScope Pay (Qwen)"
     echo " 14. CLI Proxy API (本地 2222)"
@@ -127,7 +127,7 @@ if [ -z "$PYTHON_CMD" ]; then
             ;;
         11)
             PROVIDER="Qianfan"
-            BASE_URL="https://qianfan.baidubce.com/anthropic/coding"
+            BASE_URL="https://qianfan.baidubce.com/anthropic/tokenplan/personal"
             MODEL="qianfan-code-latest"
             ;;
         12)
