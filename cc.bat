@@ -22,14 +22,9 @@ if not exist "%CC_CONFIG%" (
 
 :: 查找 Python
 set "PYTHON_CMD="
-where python >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    set "PYTHON_CMD=python"
-) else (
-    where python3 >nul 2>&1
-    if %ERRORLEVEL% equ 0 (
-        set "PYTHON_CMD=python3"
-    )
+where python >nul 2>&1 && set "PYTHON_CMD=python"
+if not defined PYTHON_CMD (
+    where python3 >nul 2>&1 && set "PYTHON_CMD=python3"
 )
 
 if not defined PYTHON_CMD (
@@ -90,8 +85,8 @@ echo Starting Claude Code...
 echo ========================================
 echo.
 
-:: 启动 Claude Code
-claude
+:: 启动 Claude Code（claude 是 npm 的 .cmd 脚本，必须用 call，否则不会返回执行 pause）
+call claude
 
 pause
 exit /b 0
@@ -121,77 +116,62 @@ echo.
 echo Starting fallback configuration mode...
 echo.
 echo Please select API provider:
-echo   1. GCLI2API (Local 2223) - Programming Recommended
-echo   2. GCLI2API Antigravity (Local 2223)
-echo   3. Zhipu AI (GLM)
-echo   4. MiniMax (International)
-echo   5. MiniMax (China)
-echo   6. Kimi (Moonshot AI)
-echo   7. Anthropic Official
-echo   8. Fangzhou (Ark)
-echo   9. Siliconflow
-echo   10. DashScope (Qwen)
-echo   11. Qianfan (Baidu) Token Plan
-echo   12. PPChat (Claude Code Proxy)
-echo   13. DashScope Pay (Qwen)
-echo   14. CLI Proxy API (Local 2222)
+echo   1. DeepSeek (Anthropic API)
+echo   2. Zhipu AI (GLM)
+echo   3. Kimi (Moonshot AI)
+echo   4. Anthropic Official
+echo   5. Fangzhou (Ark) Agent Plan
+echo   6. Siliconflow
+echo   7. DashScope (Qwen)
+echo   8. Qianfan (Baidu) Token Plan
+echo   9. PPChat (Claude Code Proxy)
+echo   10. DashScope Pay (Qwen)
+echo   11. CLI Proxy API (Local 2222)
 echo.
-set /p "CHOICE=Enter your choice [1-14]: "
+set /p "CHOICE=Enter your choice [1-11]: "
 
 :: 根据选择设置变量
 if "%CHOICE%"=="1" (
-    set "PROVIDER=GCLI2API_Local"
-    set "BASE_URL=http://127.0.0.1:2223/v1"
-    set "MODEL=gemini-2.5-pro"
+    set "PROVIDER=DeepSeek"
+    set "BASE_URL=https://api.deepseek.com/anthropic"
+    set "MODEL=deepseek-v4-pro"
 ) else if "%CHOICE%"=="2" (
-    set "PROVIDER=GCLI2API_Antigravity"
-    set "BASE_URL=http://127.0.0.1:2223/antigravity"
-    set "MODEL=claude-sonnet-4-6"
-) else if "%CHOICE%"=="3" (
     set "PROVIDER=ZhipuAI"
     set "BASE_URL=https://open.bigmodel.cn/api/anthropic"
-    set "MODEL=glm-4.7"
-) else if "%CHOICE%"=="4" (
-    set "PROVIDER=MiniMax_Intl"
-    set "BASE_URL=https://api.minimax.io/anthropic"
-    set "MODEL=MiniMax-M2.1"
-) else if "%CHOICE%"=="5" (
-    set "PROVIDER=MiniMax_CN"
-    set "BASE_URL=https://api.minimaxi.com/anthropic"
-    set "MODEL=MiniMax-M2.1"
-) else if "%CHOICE%"=="6" (
+    set "MODEL=glm-5.4[1m]"
+) else if "%CHOICE%"=="3" (
     set "PROVIDER=Kimi"
     set "BASE_URL=https://api.moonshot.cn/anthropic/"
-    set "MODEL=kimi-k2-turbo-preview"
-) else if "%CHOICE%"=="7" (
+    set "MODEL=kimi-k3"
+) else if "%CHOICE%"=="4" (
     set "PROVIDER=Anthropic"
     set "BASE_URL=https://api.anthropic.com"
-    set "MODEL=claude-3-5-sonnet-20241022"
-) else if "%CHOICE%"=="8" (
+    set "MODEL=claude-opus-5-5"
+) else if "%CHOICE%"=="5" (
     set "PROVIDER=Fangzhou"
-    set "BASE_URL=https://ark.cn-beijing.volces.com/api/coding"
+    set "BASE_URL=https://ark.cn-beijing.volces.com/api/plan"
     set "MODEL=ark-code-latest"
-) else if "%CHOICE%"=="9" (
+) else if "%CHOICE%"=="6" (
     set "PROVIDER=Siliconflow"
     set "BASE_URL=https://api.siliconflow.cn/"
-    set "MODEL=Pro/MiniMaxAI/MiniMax-M2.5"
-) else if "%CHOICE%"=="10" (
+    set "MODEL=Pro/zai-org/GLM-5.3"
+) else if "%CHOICE%"=="7" (
     set "PROVIDER=DashScope"
     set "BASE_URL=https://coding.dashscope.aliyuncs.com/apps/anthropic"
-    set "MODEL=qwen3.5-plus"
-) else if "%CHOICE%"=="11" (
+    set "MODEL=qwen3.7-plus"
+) else if "%CHOICE%"=="8" (
     set "PROVIDER=Qianfan"
     set "BASE_URL=https://qianfan.baidubce.com/anthropic/tokenplan/personal"
     set "MODEL=qianfan-code-latest"
-) else if "%CHOICE%"=="12" (
+) else if "%CHOICE%"=="9" (
     set "PROVIDER=PPChat"
     set "BASE_URL=https://code.ppchat.vip"
-    set "MODEL=claude-sonnet-4-6"
-) else if "%CHOICE%"=="13" (
+    set "MODEL=claude-sonnet-5-5"
+) else if "%CHOICE%"=="10" (
     set "PROVIDER=DashScope_Pay"
     set "BASE_URL=https://dashscope.aliyuncs.com/apps/anthropic"
-    set "MODEL=qwen3.5-plus"
-) else if "%CHOICE%"=="14" (
+    set "MODEL=qwen3.8-max"
+) else if "%CHOICE%"=="11" (
     set "PROVIDER=CLIProxyAPI"
     set "BASE_URL=http://127.0.0.1:2222"
     set "MODEL=qwen3-max"
@@ -286,5 +266,5 @@ echo ========================================
 echo.
 pause
 cls
-claude
+call claude
 pause

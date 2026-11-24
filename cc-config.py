@@ -18,120 +18,50 @@ PROVIDERS = [
         "id": "DeepSeek",
         "name": "DeepSeek (Anthropic API)",
         "base_url": "https://api.deepseek.com/anthropic",
-        "default_model": "deepseek-v4-pro[1m]",
+        "default_model": "deepseek-v4-pro",
         "models": [
-            "deepseek-v4-pro[1m]",
-            "deepseek-v4-flash[1m]",
             "deepseek-v4-pro",
+            "deepseek-flash",
+            # 旧名，仍可调用（自动路由到 V4.1-Flash）
             "deepseek-v4-flash"
         ],
-        "haiku_model": "deepseek-v4-flash",
-        "subagent_model": "deepseek-v4-flash",
+        "haiku_model": "deepseek-flash",
+        "subagent_model": "deepseek-flash",
         "effort_level": "max",
         "auto_compact_window": 1000000
-    },
-    {
-        "id": "GCLI2API_Local",
-        "name": "GCLI2API (本地 2223) - Gemini",
-        "base_url": "http://127.0.0.1:2223/v1",
-        "default_model": "gemini-2.5-pro",
-        "models": [
-            # GCLI 模式 - Gemini 系列
-            "gemini-2.5-pro",
-            "gemini-2.5-pro-high",
-            "gemini-2.5-pro-search",
-            "gemini-2.5-flash",
-            "gemini-2.5-flash-thinking",
-            "gemini-2.5-pro-medium",
-            "gemini-2.5-flash-medium",
-            "gemini-2.5-pro-low",
-            "gemini-2.5-flash-low",
-            "gemini-2.5-pro-minimal",
-            "gemini-2.5-flash-minimal",
-            "gemini-2.5-pro-max",
-            "gemini-2.5-flash-max",
-            # 其他
-            "gemini-3-pro-preview",
-            "gemini-3-flash-preview",
-            "gemini-3.1-pro-preview",
-            "gemini-3.1-flash-lite-preview",
-            "chat_20706",
-            "chat_23310"
-        ]
-    },
-    {
-        "id": "GCLI2API_Antigravity",
-        "name": "GCLI2API Antigravity (本地 2223)",
-        "base_url": "http://127.0.0.1:2223/antigravity",
-        "default_model": "claude-sonnet-4-6",
-        "models": [
-            # Claude 系列
-            "claude-sonnet-4-6",
-            "claude-sonnet-4-6-thinking",
-            "claude-opus-4-6",
-            "claude-opus-4-6-thinking",
-            # Gemini 系列
-            "gemini-2.5-pro",
-            "gemini-2.5-flash",
-            "gemini-2.5-flash-thinking",
-            "gemini-2.5-flash-lite",
-            "gemini-3-pro-high",
-            "gemini-3-pro-low",
-            "gemini-3-flash",
-            "gemini-3.1-pro-high",
-            "gemini-3.1-pro-low",
-            "gemini-3.1-flash-image",
-            # 其他
-            "gpt-oss-120b-medium"
-        ]
     },
     {
         "id": "ZhipuAI",
         "name": "Zhipu AI (GLM)",
         "base_url": "https://open.bigmodel.cn/api/anthropic",
-        "default_model": "glm-5.3[1m]",
+        "default_model": "glm-5.4[1m]",
         "models": [
+            "glm-5.4[1m]", "glm-5.4",
             "glm-5.3[1m]", "glm-5.3", "glm-5.3-flash[1m]", "glm-5.3-flash",
+            "glm-5.3-flashx",
             "glm-5.1", "glm-5", "glm-4.7", "glm-4.6", "glm-4.5", "glm-4.5-air"
         ],
-        "haiku_model": "glm-4.5-air",
+        "haiku_model": "glm-5.3-flash",
         "auto_compact_window": 1000000
-    },
-    {
-        "id": "MiniMax_Intl",
-        "name": "MiniMax (International)",
-        "base_url": "https://api.minimax.io/anthropic",
-        "default_model": "MiniMax-M2.1",
-        "models": [
-            "MiniMax-M2.1", "MiniMax-M2.5", "MiniMax-M2"
-        ]
-    },
-    {
-        "id": "MiniMax_CN",
-        "name": "MiniMax (China)",
-        "base_url": "https://api.minimaxi.com/anthropic",
-        "default_model": "MiniMax-M2.1",
-        "models": [
-            "MiniMax-M2.1", "MiniMax-M2.5", "MiniMax-M2"
-        ]
     },
     {
         "id": "Kimi",
         "name": "Kimi (Moonshot AI)",
         "base_url": "https://api.moonshot.cn/anthropic/",
-        "default_model": "kimi-k2-turbo-preview",
+        "default_model": "kimi-k3",
         "models": [
-            "kimi-k2-turbo-preview", "kimi-pro", "kimi-max"
+            "kimi-k3", "kimi-k3.1-pro",
+            "kimi-k2.7-code", "kimi-k2.7-code-highspeed", "kimi-k2.6"
         ]
     },
     {
         "id": "Anthropic",
         "name": "Anthropic Official",
         "base_url": "https://api.anthropic.com",
-        "default_model": "claude-3-5-sonnet-20241022",
+        "default_model": "claude-opus-5-5",
         "models": [
-            "claude-3-5-sonnet-20241022", "claude-3-opus-20240229",
-            "claude-3-sonnet-20240229", "claude-3-haiku-20240307"
+            "claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5",
+            "claude-fable-5-2", "claude-opus-5", "claude-sonnet-5"
         ]
     },
     {
@@ -140,7 +70,12 @@ PROVIDERS = [
         "base_url": "https://ark.cn-beijing.volces.com/api/plan",
         "default_model": "ark-code-latest",
         "models": [
-            "ark-code-latest", "kimi-k3", "glm-5.3", "deepseek-v4-flash", "deepseek-v4-pro"
+            "ark-code-latest", "doubao-seed-evolving", "doubao-seed-2.1-pro",
+            "doubao-seed-2.1-lite", "doubao-seed-2.0-mini",
+            "glm-5.3", "glm-5.3-flash",
+            "deepseek-v4.1-flash", "deepseek-v4.1-flash-economy",
+            "deepseek-v4-flash", "deepseek-v4-pro",
+            "kimi-k3.1-pro", "kimi-k2.8-preview"
         ],
         "auto_compact_window": 1000000
     },
@@ -148,11 +83,12 @@ PROVIDERS = [
         "id": "Siliconflow",
         "name": "Siliconflow",
         "base_url": "https://api.siliconflow.cn/",
-        "default_model": "Pro/MiniMaxAI/MiniMax-M2.5",
+        "default_model": "Pro/zai-org/GLM-5.3",
         "models": [
-            "Pro/MiniMaxAI/MiniMax-M2.5", "Pro/zai-org/GLM-5",
-            "Pro/moonshotai/Kimi-K2.5", "Pro/zai-org/GLM-4.7",
-            "Pro/deepseek-ai/DeepSeek-V3.2", "Qwen/Qwen3.5-397B-A17B"
+            "Pro/zai-org/GLM-5.3", "Pro/zai-org/GLM-5.3-Flash",
+            "Pro/deepseek-ai/DeepSeek-V4.1-Flash", "Pro/deepseek-ai/DeepSeek-V4-Pro",
+            "Pro/moonshotai/Kimi-K3", "Pro/moonshotai/Kimi-K2.7-Code",
+            "Qwen/Qwen3.8-27B"
         ]
     },
     {
@@ -161,8 +97,9 @@ PROVIDERS = [
         "base_url": "https://coding.dashscope.aliyuncs.com/apps/anthropic",
         "default_model": "qwen3.7-plus",
         "models": [
-            "qwen3.7-plus", "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
-            "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
+            "qwen3.7-plus", "qwen3.6-plus", "qwen3.5-plus",
+            "qwen3-coder-next", "qwen3-coder-plus", "qwen3-max-2026-01-23",
+            "glm-5.3", "glm-5", "kimi-k2.5", "glm-4.7"
         ]
     },
     {
@@ -183,19 +120,22 @@ PROVIDERS = [
         "id": "PPChat",
         "name": "PPChat (Claude Code Proxy)",
         "base_url": "https://code.ppchat.vip",
-        "default_model": "claude-sonnet-4-6",
+        "default_model": "claude-sonnet-5-5",
         "models": [
-            "claude-sonnet-4-6", "claude-opus-4-6", "claude-haiku-4-5"
+            "claude-sonnet-5-5", "claude-opus-5-5", "claude-haiku-5-5",
+            "claude-fable-5-2"
         ]
     },
     {
         "id": "DashScope_Pay",
         "name": "DashScope Pay (Qwen)",
         "base_url": "https://dashscope.aliyuncs.com/apps/anthropic",
-        "default_model": "qwen3.7-plus",
+        "default_model": "qwen3.8-max",
         "models": [
-            "qwen3.7-plus", "qwen3.5-plus", "kimi-k2.5", "glm-5", "MiniMax-M2.5",
-            "qwen3-max-2026-01-23", "qwen3-coder-next", "qwen3-coder-plus", "glm-4.7"
+            "qwen3.8-max", "qwen3.8-flash", "qwen3.8-27b",
+            "qwen3.7-plus", "qwen3.7-max", "qwen3.7-flash",
+            "qwen3-coder-next", "qwen3-coder-plus",
+            "glm-5.3", "deepseek-v4-pro"
         ]
     },
     {
@@ -416,6 +356,9 @@ def select_provider(cache):
     print_provider_list()
     # 获取默认选择
     last_provider = cache.get("_last_provider")
+    # 忽略已被移除的 provider（如 GCLI2API / MiniMax）
+    if last_provider and not any(p["id"] == last_provider for p in PROVIDERS):
+        last_provider = None
     if last_provider:
         # 找到 index
         default_idx = None

@@ -56,91 +56,73 @@ if [ -z "$PYTHON_CMD" ]; then
     echo "启动降级配置模式..."
     echo ""
     echo "请选择 API 提供商（降级模式）:"
-    echo "  1. GCLI2API (本地 2223) - 编程推荐"
-    echo "  2. GCLI2API Antigravity (本地 2223)"
-    echo "  3. Zhipu AI (GLM)"
-    echo "  4. MiniMax (International)"
-    echo "  5. MiniMax (China)"
-    echo "  6. Kimi (Moonshot AI)"
-    echo "  7. Anthropic Official"
-    echo "  8. Fangzhou (Ark) Agent Plan"
-    echo "  9. Siliconflow"
-    echo " 10. DashScope (Qwen)"
-    echo " 11. Qianfan (Baidu) Token Plan"
-    echo " 12. PPChat (Claude Code Proxy)"
-    echo " 13. DashScope Pay (Qwen)"
-    echo " 14. CLI Proxy API (本地 2222)"
+    echo "  1. DeepSeek (Anthropic API)"
+    echo "  2. Zhipu AI (GLM)"
+    echo "  3. Kimi (Moonshot AI)"
+    echo "  4. Anthropic Official"
+    echo "  5. Fangzhou (Ark) Agent Plan"
+    echo "  6. Siliconflow"
+    echo "  7. DashScope (Qwen)"
+    echo "  8. Qianfan (Baidu) Token Plan"
+    echo "  9. PPChat (Claude Code Proxy)"
+    echo " 10. DashScope Pay (Qwen)"
+    echo " 11. CLI Proxy API (本地 2222)"
     echo ""
-    read -p "Enter your choice [1-14]: " CHOICE
+    read -p "Enter your choice [1-11]: " CHOICE
 
     # 根据选择设置变量
     case $CHOICE in
         1)
-            PROVIDER="GCLI2API_Local"
-            BASE_URL="http://127.0.0.1:2223/v1"
-            MODEL="gemini-2.5-pro"
+            PROVIDER="DeepSeek"
+            BASE_URL="https://api.deepseek.com/anthropic"
+            MODEL="deepseek-v4-pro"
             ;;
         2)
-            PROVIDER="GCLI2API_Antigravity"
-            BASE_URL="http://127.0.0.1:2223/antigravity"
-            MODEL="claude-sonnet-4-6"
-            ;;
-        3)
             PROVIDER="ZhipuAI"
             BASE_URL="https://open.bigmodel.cn/api/anthropic"
-            MODEL="glm-4.7"
+            MODEL="glm-5.4[1m]"
             ;;
-        4)
-            PROVIDER="MiniMax_Intl"
-            BASE_URL="https://api.minimax.io/anthropic"
-            MODEL="MiniMax-M2.1"
-            ;;
-        5)
-            PROVIDER="MiniMax_CN"
-            BASE_URL="https://api.minimaxi.com/anthropic"
-            MODEL="MiniMax-M2.1"
-            ;;
-        6)
+        3)
             PROVIDER="Kimi"
             BASE_URL="https://api.moonshot.cn/anthropic/"
-            MODEL="kimi-k2-turbo-preview"
+            MODEL="kimi-k3"
             ;;
-        7)
+        4)
             PROVIDER="Anthropic"
             BASE_URL="https://api.anthropic.com"
-            MODEL="claude-3-5-sonnet-20241022"
+            MODEL="claude-opus-5-5"
             ;;
-        8)
+        5)
             PROVIDER="Fangzhou"
             BASE_URL="https://ark.cn-beijing.volces.com/api/plan"
             MODEL="ark-code-latest"
             ;;
-        9)
+        6)
             PROVIDER="Siliconflow"
             BASE_URL="https://api.siliconflow.cn/"
-            MODEL="Pro/MiniMaxAI/MiniMax-M2.5"
+            MODEL="Pro/zai-org/GLM-5.3"
             ;;
-        10)
+        7)
             PROVIDER="DashScope"
             BASE_URL="https://coding.dashscope.aliyuncs.com/apps/anthropic"
-            MODEL="qwen3.5-plus"
+            MODEL="qwen3.7-plus"
             ;;
-        11)
+        8)
             PROVIDER="Qianfan"
             BASE_URL="https://qianfan.baidubce.com/anthropic/tokenplan/personal"
             MODEL="qianfan-code-latest"
             ;;
-        12)
+        9)
             PROVIDER="PPChat"
             BASE_URL="https://code.ppchat.vip"
-            MODEL="claude-sonnet-4-6"
+            MODEL="claude-sonnet-5-5"
             ;;
-        13)
+        10)
             PROVIDER="DashScope_Pay"
             BASE_URL="https://dashscope.aliyuncs.com/apps/anthropic"
-            MODEL="qwen3.5-plus"
+            MODEL="qwen3.8-max"
             ;;
-        14)
+        11)
             PROVIDER="CLIProxyAPI"
             BASE_URL="http://127.0.0.1:2222"
             MODEL="qwen3-max"

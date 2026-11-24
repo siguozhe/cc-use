@@ -1,6 +1,6 @@
 # Claude Code 一键安装与配置脚本
 
-一套 Claude Code 的一键安装和 API 配置脚本，支持 Linux/macOS 和 Windows，内置 12 个 API 提供商。
+一套 Claude Code 的一键安装和 API 配置脚本，支持 Linux/macOS 和 Windows，内置 11 个 API 提供商。
 
 ## 功能特性
 
@@ -123,33 +123,32 @@ cc.bat
 
 | 序号 | 提供商 | 默认模型 | 可选模型 | Base URL |
 | ------ | -------- | ---------- | ---------- | ---------- |
-| 1 | DeepSeek (Anthropic API) | deepseek-v4-pro[1m] | deepseek-v4-flash[1m], deepseek-v4-pro, deepseek-v4-flash | `https://api.deepseek.com/anthropic` |
-| 2 | Zhipu AI (智谱) | glm-5.3[1m] | glm-5.3, glm-5.3-flash, glm-5.1, glm-5, glm-4.7, glm-4.6, glm-4.5, glm-4.5-air | `https://open.bigmodel.cn/api/anthropic` |
-| 3 | MiniMax (国际) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimax.io/anthropic` |
-| 4 | MiniMax (中国) | MiniMax-M2.1 | MiniMax-M2.5, MiniMax-M2 | `https://api.minimaxi.com/anthropic` |
-| 5 | Kimi (月之暗面) | kimi-k2-turbo-preview | kimi-pro, kimi-max | `https://api.moonshot.cn/anthropic/` |
-| 6 | Anthropic 官方 | claude-3-5-sonnet-20241022 | claude-3-opus-20240229, claude-3-sonnet-20240229, claude-3-haiku-20240307 | `https://api.anthropic.com` |
-| 7 | 火山方舟 (Ark) | ark-code-latest | doubao-seed-2.0-code, doubao-seed-2.0-pro, minimax-m2.5, glm-4.7, deepseek-v3.2, kimi-k2.5 | `https://ark.cn-beijing.volces.com/api/coding` |
-| 8 | Siliconflow | Pro/MiniMaxAI/MiniMax-M2.5 | Pro/zai-org/GLM-5, Pro/moonshotai/Kimi-K2.5, Pro/zai-org/GLM-4.7, Pro/deepseek-ai/DeepSeek-V3.2, Qwen/Qwen3.5-397B-A17B | `https://api.siliconflow.cn/` |
-| 9 | 通义千问 (DashScope) | qwen3.7-plus | qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
-| 10 | 百度千帆 (Qianfan) Token Plan | qianfan-code-latest | ernie-5.5-flash-preview, ernie-light-dt-1.0, glm-5.3, glm-5.2, glm-5.1, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-1017, deepseek-v4-pro, deepseek-v4-pro-0813, deepseek-v4-flash-0731, unlimited-ocr-2 | `https://qianfan.baidubce.com/anthropic/tokenplan/personal` |
-| 11 | PPChat (Claude Code 代理) | claude-sonnet-4-6 | claude-opus-4-6, claude-haiku-4-5 | `https://code.ppchat.vip` |
-| 12 | 通义千问付费 (DashScope Pay) | qwen3.7-plus | qwen3.5-plus, kimi-k2.5, glm-5, MiniMax-M2.5, qwen3-max-2026-01-23, qwen3-coder-next, qwen3-coder-plus, glm-4.7 | `https://dashscope.aliyuncs.com/apps/anthropic` |
+| 1 | DeepSeek (Anthropic API) | deepseek-v4-pro | deepseek-flash, deepseek-v4-flash（旧名） | `https://api.deepseek.com/anthropic` |
+| 2 | Zhipu AI (智谱) | glm-5.4[1m] | glm-5.4, glm-5.3, glm-5.3-flash, glm-5.3-flashx, glm-5.1, glm-5, glm-4.7, glm-4.6, glm-4.5, glm-4.5-air | `https://open.bigmodel.cn/api/anthropic` |
+| 3 | Kimi (月之暗面) | kimi-k3 | kimi-k3.1-pro, kimi-k2.7-code, kimi-k2.7-code-highspeed, kimi-k2.6 | `https://api.moonshot.cn/anthropic/` |
+| 4 | Anthropic 官方 | claude-opus-5-5 | claude-sonnet-5-5, claude-haiku-5-5, claude-fable-5-2, claude-opus-5, claude-sonnet-5 | `https://api.anthropic.com` |
+| 5 | 火山方舟 (Ark) Agent Plan | ark-code-latest | doubao-seed-evolving, doubao-seed-2.1-pro, doubao-seed-2.1-lite, doubao-seed-2.0-mini, glm-5.3, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-economy, deepseek-v4-flash, deepseek-v4-pro, kimi-k3.1-pro, kimi-k2.8-preview | `https://ark.cn-beijing.volces.com/api/plan` |
+| 6 | Siliconflow | Pro/zai-org/GLM-5.3 | Pro/zai-org/GLM-5.3-Flash, Pro/deepseek-ai/DeepSeek-V4.1-Flash, Pro/deepseek-ai/DeepSeek-V4-Pro, Pro/moonshotai/Kimi-K3, Pro/moonshotai/Kimi-K2.7-Code, Qwen/Qwen3.8-27B | `https://api.siliconflow.cn/` |
+| 7 | 通义千问 (DashScope) | qwen3.7-plus | qwen3.6-plus, qwen3.5-plus, qwen3-coder-next, qwen3-coder-plus, qwen3-max-2026-01-23, glm-5.3, glm-5, kimi-k2.5, glm-4.7 | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
+| 8 | 百度千帆 (Qianfan) Token Plan | qianfan-code-latest | ernie-5.5-flash-preview, ernie-light-dt-1.0, glm-5.3, glm-5.2, glm-5.1, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-1017, deepseek-v4-pro, deepseek-v4-pro-0813, deepseek-v4-flash-0731, unlimited-ocr-2 | `https://qianfan.baidubce.com/anthropic/tokenplan/personal` |
+| 9 | PPChat (Claude Code 代理) | claude-sonnet-5-5 | claude-opus-5-5, claude-haiku-5-5, claude-fable-5-2 | `https://code.ppchat.vip` |
+| 10 | 通义千问付费 (DashScope Pay) | qwen3.8-max | qwen3.8-flash, qwen3.8-27b, qwen3.7-plus, qwen3.7-max, qwen3.7-flash, qwen3-coder-next, qwen3-coder-plus, glm-5.3, deepseek-v4-pro | `https://dashscope.aliyuncs.com/apps/anthropic` |
+| 11 | CLI Proxy API (本地 2222) | qwen3-max | deepseek-v3, deepseek-v3.2, kimi-k2, gemini-3-pro-preview | `http://127.0.0.1:2222` |
 
 > 除预设模型外，每个提供商都支持输入自定义模型名称。
 
 **特殊说明**：
 - **DeepSeek (选项 1)**：
-  - 模型名带 `[1m]` 后缀启用 1M 上下文窗口（如 `deepseek-v4-pro[1m]`）
-  - Haiku/Subagent 模型自动使用 `deepseek-v4-flash`
-  - 自动设置压缩窗口为 400k tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=400000`）
+  - API 当前模型为 `deepseek-v4-pro`（V4-Pro-0813）与 `deepseek-flash`（V4.1-Flash-1017），均原生支持 1M 上下文
+  - Haiku/Subagent 模型自动使用 `deepseek-flash`
+  - 自动设置压缩窗口为 1M tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000`）
   - 自动设置 `CLAUDE_CODE_EFFORT_LEVEL=max`
 - **Zhipu AI (选项 2)**：
-  - GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀启用 1M 上下文（如 `glm-5.3[1m]`）
-  - Haiku 模型自动使用 `glm-4.5-air`（快模型）
+  - GLM-5.4 / GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀启用 1M 上下文（如 `glm-5.4[1m]`）
+  - Haiku 模型自动使用 `glm-5.3-flash`（快模型）
   - 自动设置压缩窗口为 1M tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000`）
   - 可在 Claude Code 会话中输入 `/effort` 切换思考强度
-- **Siliconflow (选项 8)**：会自动添加 `CLAUDE_CODE_ADDITIONAL_REQUEST_BODY` 启用思考模式
+- **Siliconflow (选项 6)**：会自动添加 `CLAUDE_CODE_ADDITIONAL_REQUEST_BODY` 启用思考模式
 - **VS Code 插件用户**：如果使用 VS Code 插件，需要关闭 thinking 模式。请在 VS Code 设置中搜索 `claude-code.disableThinking` 并启用该选项，或在 `settings.json` 中添加：
   ```json
   {
@@ -204,27 +203,27 @@ DeepSeek 选项会额外添加：
 ```json
 {
   "env": {
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-v4-flash",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-v4-flash",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "deepseek-flash",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "deepseek-flash",
     "CLAUDE_CODE_EFFORT_LEVEL": "max",
-    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "400000"
-  }
-}
-```
-
-> **DeepSeek 说明**：模型名带 `[1m]` 后缀（如 `deepseek-v4-pro[1m]`）可启用 1M 上下文窗口。自动压缩窗口设为 400k 以平衡成本与性能。
-
-Zhipu AI 选项会额外添加：
-```json
-{
-  "env": {
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-4.5-air",
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000"
   }
 }
 ```
 
-> **Zhipu AI 说明**：GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀（如 `glm-5.3[1m]`）可启用 1M 上下文。会话中输入 `/effort` 切换思考强度，`max` 推荐用于编码任务。
+> **DeepSeek 说明**：当前 API 模型 `deepseek-v4-pro` 与 `deepseek-flash` 均原生支持 1M 上下文，压缩窗口设为 1M。
+
+Zhipu AI 选项会额外添加：
+```json
+{
+  "env": {
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "glm-5.3-flash",
+    "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000"
+  }
+}
+```
+
+> **Zhipu AI 说明**：GLM-5.4 / GLM-5.3 / GLM-5.3-Flash 模型名带 `[1m]` 后缀（如 `glm-5.4[1m]`）可启用 1M 上下文。会话中输入 `/effort` 切换思考强度，`max` 推荐用于编码任务。
 
 ### 3. `~/.claude/config.json`
 
