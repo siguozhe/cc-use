@@ -170,7 +170,7 @@ if "%CHOICE%"=="1" (
 ) else if "%CHOICE%"=="10" (
     set "PROVIDER=DashScope_Pay"
     set "BASE_URL=https://dashscope.aliyuncs.com/apps/anthropic"
-    set "MODEL=qwen3.8-max"
+    set "MODEL=qwen4-max"
 ) else if "%CHOICE%"=="11" (
     set "PROVIDER=CLIProxyAPI"
     set "BASE_URL=http://127.0.0.1:2222"

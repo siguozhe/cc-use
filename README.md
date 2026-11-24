@@ -129,10 +129,10 @@ cc.bat
 | 4 | Anthropic 官方 | claude-opus-5-5 | claude-sonnet-5-5, claude-haiku-5-5, claude-fable-5-2, claude-opus-5, claude-sonnet-5 | `https://api.anthropic.com` |
 | 5 | 火山方舟 (Ark) Agent Plan | ark-code-latest | doubao-seed-evolving, doubao-seed-2.1-pro, doubao-seed-2.1-lite, doubao-seed-2.0-mini, glm-5.3, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-economy, deepseek-v4-flash, deepseek-v4-pro, kimi-k3.1-pro, kimi-k2.8-preview | `https://ark.cn-beijing.volces.com/api/plan` |
 | 6 | Siliconflow | Pro/zai-org/GLM-5.3 | Pro/zai-org/GLM-5.3-Flash, Pro/deepseek-ai/DeepSeek-V4.1-Flash, Pro/deepseek-ai/DeepSeek-V4-Pro, Pro/moonshotai/Kimi-K3, Pro/moonshotai/Kimi-K2.7-Code, Qwen/Qwen3.8-27B | `https://api.siliconflow.cn/` |
-| 7 | 通义千问 (DashScope) | qwen3.7-plus | qwen3.6-plus, qwen3.5-plus, qwen3-coder-next, qwen3-coder-plus, qwen3-max-2026-01-23, glm-5.3, glm-5, kimi-k2.5, glm-4.7 | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
+| 7 | 通义千问 (DashScope) | qwen3.7-plus | qwen3.6-plus, qwen3.5-plus, qwen3-coder-next, qwen3-coder-plus, qwen3-max-2026-01-23, glm-5.3, glm-5, kimi-k2.5, glm-4.7, qwen4-max | `https://coding.dashscope.aliyuncs.com/apps/anthropic` |
 | 8 | 百度千帆 (Qianfan) Token Plan | qianfan-code-latest | ernie-5.5-flash-preview, ernie-light-dt-1.0, glm-5.3, glm-5.2, glm-5.1, glm-5.3-flash, deepseek-v4.1-flash, deepseek-v4.1-flash-1017, deepseek-v4-pro, deepseek-v4-pro-0813, deepseek-v4-flash-0731, unlimited-ocr-2 | `https://qianfan.baidubce.com/anthropic/tokenplan/personal` |
 | 9 | PPChat (Claude Code 代理) | claude-sonnet-5-5 | claude-opus-5-5, claude-haiku-5-5, claude-fable-5-2 | `https://code.ppchat.vip` |
-| 10 | 通义千问付费 (DashScope Pay) | qwen3.8-max | qwen3.8-flash, qwen3.8-27b, qwen3.7-plus, qwen3.7-max, qwen3.7-flash, qwen3-coder-next, qwen3-coder-plus, glm-5.3, deepseek-v4-pro | `https://dashscope.aliyuncs.com/apps/anthropic` |
+| 10 | 通义千问付费 (DashScope Pay) | qwen4-max | qwen3.8-max, qwen3.8-flash, qwen3.8-27b, qwen3.7-plus, qwen3.7-max, qwen3.7-flash, qwen3-coder-next, qwen3-coder-plus, glm-5.3, glm-5.2, deepseek-v4.1-flash, deepseek-v4-pro, deepseek-v4-pro-0813, kimi-k3.1-pro, kimi-k2.7-code, kimi-k2.6 | `https://dashscope.aliyuncs.com/apps/anthropic` |
 | 11 | CLI Proxy API (本地 2222) | qwen3-max | deepseek-v3, deepseek-v3.2, kimi-k2, gemini-3-pro-preview | `http://127.0.0.1:2222` |
 
 > 除预设模型外，每个提供商都支持输入自定义模型名称。
@@ -149,6 +149,12 @@ cc.bat
   - 自动设置压缩窗口为 1M tokens（`CLAUDE_CODE_AUTO_COMPACT_WINDOW=1000000`）
   - 可在 Claude Code 会话中输入 `/effort` 切换思考强度
 - **Siliconflow (选项 6)**：会自动添加 `CLAUDE_CODE_ADDITIONAL_REQUEST_BODY` 启用思考模式
+- **DashScope Pay (选项 10)**：
+  - 使用百炼按量计费端点，默认模型 `qwen4-max`（1M 上下文，最大输出 131072）
+  - 百炼推荐使用业务空间专属域名：`https://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/apps/anthropic`（`{WorkspaceId}` 见控制台业务空间详情）；原 `https://dashscope.aliyuncs.com` 仍可用
+  - 该端点仅提供 Messages 接口，不提供 `/v1/models`，部分客户端的模型探测会返回 404
+  - `temperature` 取值范围为 `[0, 2)`，与 Anthropic 官方的 `[0, 1]` 不同
+  - 思考强度建议用 `output_config.effort` 控制，`thinking.budget_tokens` 即将废弃
 - **VS Code 插件用户**：如果使用 VS Code 插件，需要关闭 thinking 模式。请在 VS Code 设置中搜索 `claude-code.disableThinking` 并启用该选项，或在 `settings.json` 中添加：
   ```json
   {

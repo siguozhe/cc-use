@@ -120,7 +120,7 @@ if [ -z "$PYTHON_CMD" ]; then
         10)
             PROVIDER="DashScope_Pay"
             BASE_URL="https://dashscope.aliyuncs.com/apps/anthropic"
-            MODEL="qwen3.8-max"
+            MODEL="qwen4-max"
             ;;
         11)
             PROVIDER="CLIProxyAPI"

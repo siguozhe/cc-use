@@ -99,7 +99,8 @@ PROVIDERS = [
         "models": [
             "qwen3.7-plus", "qwen3.6-plus", "qwen3.5-plus",
             "qwen3-coder-next", "qwen3-coder-plus", "qwen3-max-2026-01-23",
-            "glm-5.3", "glm-5", "kimi-k2.5", "glm-4.7"
+            "glm-5.3", "glm-5", "kimi-k2.5", "glm-4.7",
+            "qwen4-max"
         ]
     },
     {
@@ -130,12 +131,15 @@ PROVIDERS = [
         "id": "DashScope_Pay",
         "name": "DashScope Pay (Qwen)",
         "base_url": "https://dashscope.aliyuncs.com/apps/anthropic",
-        "default_model": "qwen3.8-max",
+        "default_model": "qwen4-max",
         "models": [
+            "qwen4-max",
             "qwen3.8-max", "qwen3.8-flash", "qwen3.8-27b",
             "qwen3.7-plus", "qwen3.7-max", "qwen3.7-flash",
             "qwen3-coder-next", "qwen3-coder-plus",
-            "glm-5.3", "deepseek-v4-pro"
+            "glm-5.3", "glm-5.2",
+            "deepseek-v4.1-flash", "deepseek-v4-pro", "deepseek-v4-pro-0813",
+            "kimi-k3.1-pro", "kimi-k2.7-code", "kimi-k2.6"
         ]
     },
     {
